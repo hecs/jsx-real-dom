@@ -1,15 +1,13 @@
 type Child = HTMLElement | string | undefined | boolean;
 
-export const Fragment = (props: any) => {
-    return props.children as Child[];
-}
+export const Fragment = "Fragment"
 
 export function h(
-    tagName: string | typeof Fragment,
+    tagName: string,
     attrs: { [key: string]: any },
     ...children: Child[]
 ): Child[] | Child {
-    if (typeof tagName === 'function' && tagName.name === 'Fragment') {
+    if (tagName === Fragment) {
         return children
     }
     const el = document.createElement(tagName as string);
