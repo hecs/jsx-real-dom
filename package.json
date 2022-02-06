@@ -1,0 +1,18 @@
+{
+  "name": "jsx-real-dom",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "esbuild --bundle --serve --servedir=. --outdir=./ index.tsx",
+    "temp-build": "esbuild --bundle --outdir=temp index.tsx",
+    "check": "tsc --noEmit"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "esbuild": "^0.14.19",
+    "prettier": "^2.5.1",
+    "typescript": "^4.5.5"
+  }
+}
