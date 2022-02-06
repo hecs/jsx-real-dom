@@ -1,14 +1,14 @@
 type Child = HTMLElement | string | undefined | boolean;
 
-export const Fragment = "Fragment"
+export const Fragment = "Fragment";
 
 export function h(
     tagName: string,
     attrs: { [key: string]: any },
     ...children: Child[]
-): Child[] | Child {
+): Child[] | Child {
     if (tagName === Fragment) {
-        return children
+        return children;
     }
     const el = document.createElement(tagName as string);
     if (attrs) {
@@ -47,9 +47,11 @@ export function h(
     return el;
 }
 
-
 type HTMLElWithRef = HTMLElement & { ref?: string };
-export function getRefs(el: HTMLElWithRef | HTMLElWithRef[], refs = {}): { [key: string]: HTMLElement } {
+export function getRefs(
+    el: HTMLElWithRef | HTMLElWithRef[],
+    refs = {}
+): { [key: string]: HTMLElement } {
     if (Array.isArray(el)) {
         el.forEach((_e) => getRefs(_e, refs));
         return refs;
@@ -58,10 +60,9 @@ export function getRefs(el: HTMLElWithRef | HTMLElWithRef[], refs = {}): { [key:
     if (refKey) {
         refs[refKey] = el;
     }
-    
+
     Array.from(el.children).forEach((c) => {
         getRefs(c as HTMLElWithRef, refs);
     });
     return refs;
 }
-
