@@ -30,6 +30,7 @@ const html = (
         <span style="color: green">Kebab</span>
         <span style={{ color: "red" }}>Pizza</span>
         <div onMouseMove={console.log}>
+            This has onMouseMove event <br />
             Buttons
             {":"}
             <button ref="pizza" disabled textContent="Disabled knapp…" />
@@ -57,10 +58,12 @@ const html = (
                 </li>
             ))}
         </ul>
-        <div>{htmlString}</div>
+        <div>As text: {htmlString}</div>
         <div dangerouslySetInnerHTML={{ __html: htmlString + " < dangerouslySetInnerHTML" }}></div>
-        <label for="korv">Korv typ</label>
+        <label for="korv">Label attribute "for"</label>
         <input id="korv" />
+        <label htmlFor="korv2">Label property "htmlFor"</label>
+        <input id="korv2" />
         <Fragment>
             <div>Inside fragment</div>
         </Fragment>
