@@ -1,3 +1,5 @@
+import { flattenDeep } from "./flatDeep-polyfill";
+
 type Child = HTMLElement | string | undefined | boolean;
 
 export const Fragment = "Fragment";
@@ -48,30 +50,4 @@ export function h(
     el.append(...(toAppend as (string | Node)[]));
 
     return el;
-}
-
-type HTMLElWithRef = HTMLElement & { ref?: string };
-export function getRefs(
-    el: HTMLElWithRef | HTMLElWithRef[],
-    refs = {}
-): { [key: string]: HTMLElement } {
-    if (Array.isArray(el)) {
-        el.forEach((_e) => getRefs(_e, refs));
-        return refs;
-    }
-    const refKey = el.getAttribute("ref");
-    if (refKey) refs[refKey] = refs[refKey] ? flattenDeep([refs[refKey], el]) : el;
-
-    Array.from(el.children).forEach((c) => {
-        getRefs(c as HTMLElWithRef, refs);
-    });
-    return refs;
-}
-
-function flattenDeep(arr) {
-    // Polyfill for array.flat(Infinity).
-    return arr.reduce(
-        (acc, val) => (Array.isArray(val) ? acc.concat(flattenDeep(val)) : acc.concat(val)),
-        []
-    );
 }
