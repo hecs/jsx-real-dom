@@ -4,9 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "esbuild --bundle --serve --servedir=. --outdir=./ index.tsx",
-    "temp-build": "esbuild --bundle --outdir=temp index.tsx",
-    "check": "tsc --noEmit"
+    "start": "tsc --noEmit && esbuild --bundle --serve --servedir=. --outdir=./ index.tsx",
+    "temp-build": "esbuild --bundle --outdir=temp index.tsx"
   },
   "author": "",
   "license": "ISC",
