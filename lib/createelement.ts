@@ -6,11 +6,11 @@ export function h(
     tagName: string,
     attrs: { [key: string]: any },
     ...children: Child[]
-): Child[] | Child {
+): Child | Child[] {
     if (tagName === Fragment) {
         return children;
     }
-    const el = document.createElement(tagName as string);
+    const el = document.createElement(tagName);
     if (attrs) {
         if (attrs.className) {
             attrs.class = `${attrs.class || ""} ${attrs.className || ""}`;
@@ -31,18 +31,21 @@ export function h(
                     });
                 }
             } else {
-                el.setAttribute(key, val);
+                const isBooleanAttributeFalse = val === false;
+                if (!isBooleanAttributeFalse) {
+                    el.setAttribute(key, val);
+                }
             }
         }
     }
 
-    const childrenToAppend = children.flat(Infinity).filter((n) => {
+    const toAppend = flattenDeep(children).filter((n) => {
         if (n instanceof HTMLElement) return true;
         if (typeof n !== "object" && n != null && n !== false) return true;
         return false;
     });
 
-    el.append(...(childrenToAppend as (string | Node)[]));
+    el.append(...(toAppend as (string | Node)[]));
 
     return el;
 }
@@ -57,12 +60,18 @@ export function getRefs(
         return refs;
     }
     const refKey = el.getAttribute("ref");
-    if (refKey) {
-        refs[refKey] = el;
-    }
+    if (refKey) refs[refKey] = refs[refKey] ? flattenDeep([refs[refKey], el]) : el;
 
     Array.from(el.children).forEach((c) => {
         getRefs(c as HTMLElWithRef, refs);
     });
     return refs;
+}
+
+function flattenDeep(arr) {
+    // Polyfill for array.flat(Infinity).
+    return arr.reduce(
+        (acc, val) => (Array.isArray(val) ? acc.concat(flattenDeep(val)) : acc.concat(val)),
+        []
+    );
 }

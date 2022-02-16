@@ -1,10 +1,10 @@
 {
     "compileOnSave": true,
     "compilerOptions": {
-        "target": "es6",
+        "target": "ES2015",
         "outDir": "temp",
         "lib": [
-            "ES2019",
+            "ES2017",
             "dom"
         ],
         "sourceMap": true,
@@ -17,6 +17,5 @@
         "strict": true,
         "suppressImplicitAnyIndexErrors": true,
         "noImplicitAny": false,
-        "baseUrl": ".",
     }
 }

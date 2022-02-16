@@ -1,4 +1,4 @@
-import { h } from "lib/createelement";
+import { h } from "./lib/createelement";
 
 customElements.define(
     "ce-app",

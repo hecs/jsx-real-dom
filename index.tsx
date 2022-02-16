@@ -1,5 +1,5 @@
 import { h, getRefs, Fragment } from "./lib/createelement";
-import "did-app";
+import "./did-app";
 
 console.log("hello and welcome");
 
@@ -48,9 +48,9 @@ const html = (
         <div class="klass">klass</div>
         <div className="klassname">klassname</div>
         <ul>
-            {items.map((i) => (
-                <li>
-                    Name: {i.planet}
+            {items.map((i, index) => (
+                <li ref="listItems">
+                    Name: <span ref={`planet${index}`}>{i.planet}</span>
                     <br></br>
                     Age: {i.sizeKm}
                 </li>
@@ -74,10 +74,13 @@ const html = (
                 </Fragment>
             </Fragment>
         </Fragment>
+
+        <button disabled={false}>Boolean attributes (disabled=false)</button>
+        <button disabled={true}>Boolean attributes (disabled=true)</button>
     </div>
 );
 
-const { clickButton, pizza, kebab } = getRefs(html);
-console.log(clickButton, pizza, kebab);
-html.style.color = "pink";
+const refs = getRefs(html);
+console.log("refs:", refs);
+html.style.color = "DarkOrchid";
 document.body.append(html);
