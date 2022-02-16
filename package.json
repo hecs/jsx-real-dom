@@ -1,17 +1,17 @@
 {
-  "name": "jsx-real-dom",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "start": "tsc --noEmit && esbuild --bundle --serve --servedir=. --outdir=./ index.tsx",
-    "temp-build": "esbuild --bundle --outdir=temp index.tsx"
-  },
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "esbuild": "^0.14.19",
-    "prettier": "^2.5.1",
-    "typescript": "^4.5.5"
-  }
+    "name": "jsx-real-dom",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "start": "tsc --noEmit && esbuild --bundle --serve --servedir=example --outdir=example example/index.tsx",
+        "temp-build": "esbuild --bundle --outdir=temp index.tsx"
+    },
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "esbuild": "^0.14.19",
+        "prettier": "^2.5.1",
+        "typescript": "^4.5.5"
+    }
 }

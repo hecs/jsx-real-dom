@@ -1,5 +1,5 @@
-import { h, Fragment } from "./lib/createelement";
-import { getRefs } from "./lib/getRefs";
+import { h, Fragment } from "../lib/createelement";
+import { getRefs } from "../lib/getRefs";
 import "./did-app";
 
 console.log("hello and welcome");
