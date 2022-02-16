@@ -9,14 +9,14 @@ function clickHandler(e) {
 }
 
 const items = [
-    { planet: "Mercury", sizeKm: 2.44 },
-    { planet: "Venus", sizeKm: 6.052 },
-    { planet: "Earth", sizeKm: 6.371 },
-    { planet: "Mars", sizeKm: 3.39 },
-    { planet: "Jupiter", sizeKm: 69.911 },
-    { planet: "Saturn", sizeKm: 58.232 },
-    { planet: "Uranus", sizeKm: 25.362 },
-    { planet: "Neptune", sizeKm: 24.622 },
+    { planet: "Mercury", size: 2.44 },
+    { planet: "Venus", size: 6.052 },
+    { planet: "Earth", size: 6.371 },
+    { planet: "Mars", size: 3.39 },
+    { planet: "Jupiter", size: 69.911 },
+    { planet: "Saturn", size: 58.232 },
+    { planet: "Uranus", size: 25.362 },
+    { planet: "Neptune", size: 24.622 },
 ] as const;
 
 const htmlString = "<b>I'm bold</b>";
@@ -54,7 +54,7 @@ const html = (
                 <li ref="listItems">
                     Name: <span ref={`planet${index}`}>{i.planet}</span>
                     <br></br>
-                    Age: {i.sizeKm}
+                    Size: {i.size}
                 </li>
             ))}
         </ul>
