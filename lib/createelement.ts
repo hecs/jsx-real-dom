@@ -54,7 +54,7 @@ export function h(
         Object.assign(el, attrs);
         for (const [key, val] of Object.entries(attrs)) {
             if (key.startsWith("on")) {
-                el.addEventListener(key.slice(2, key.length).toLowerCase(), val, false);
+                el.addEventListener(key.substring(2).toLowerCase(), val, false);
             } else if (key === "dangerouslySetInnerHTML") {
                 el.innerHTML = val.__html || "";
             } else if (key === "style" && typeof attrs.style !== "string") {
