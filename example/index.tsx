@@ -30,8 +30,10 @@ const html = (
         <span style="color: green">Style as string</span>
         <span style={{ color: "red" }}>Style as object</span>
         <div
-            onMouseMove={console.log}
-            ref="mousearea"
+            onMouseMove={(ev: MouseEvent) => {
+                refs.mousepos.textContent = JSON.stringify({ x: ev.offsetX, y: ev.offsetY });
+            }}
+            
             style={{ padding: "20px", border: "1px dashed #ccc", position: "relative" }}
         >
             This has onMouseMove event <br />
@@ -91,9 +93,6 @@ const html = (
 );
 
 const refs = getRefs(html);
-refs.mousearea.addEventListener("mousemove", (ev: MouseEvent) => {
-    refs.mousepos.textContent = JSON.stringify({ x: ev.layerX, y: ev.layerY });
-});
 
 console.log("refs:", refs);
 html.style.color = "DarkOrchid";
