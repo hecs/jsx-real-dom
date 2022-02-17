@@ -1,3 +1,5 @@
+import { getOrCreateHook } from "./hooks";
+
 type ContextListener<T> = (T) => void;
 type Context<T> = () => any;
 
@@ -32,14 +34,11 @@ export function createContext<T>(initialValue: T): Context<T> {
 }
 
 export function useContext<T>(context: Context<T>) {
-    const currentContext = useContext.caller["_context"];
-    if (currentContext.hookCount < (currentContext.hooks || []).length) {
-        return currentContext.hooks[currentContext.hookCount++]();
-    }
-    const { listen } = context();
-    listen(() => {
-        currentContext.render();
+    return getOrCreateHook((ctx) => {
+        const { listen } = context();
+        listen(() => {
+            ctx.render();
+        });
+        return context;
     });
-    currentContext.hookCount = currentContext.hooks.push(context);
-    return context();
 }
