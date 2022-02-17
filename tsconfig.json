@@ -3,10 +3,7 @@
     "compilerOptions": {
         "target": "ES2015",
         "outDir": "temp",
-        "lib": [
-            "ES2017",
-            "dom"
-        ],
+        "lib": ["ES2017", "dom"],
         "sourceMap": true,
         "jsx": "react",
         "jsxFactory": "h",
@@ -14,8 +11,8 @@
         "module": "ES6",
         "moduleResolution": "node",
         "noImplicitReturns": true,
-        "strict": true,
+        "strict": false,
         "suppressImplicitAnyIndexErrors": true,
-        "noImplicitAny": false,
+        "noImplicitAny": false
     }
 }

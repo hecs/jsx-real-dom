@@ -1,4 +1,4 @@
-import { h, Fragment } from "../lib/createelement";
+import { h, Fragment, useState } from "../lib/createelement";
 import { getRefs } from "../lib/getRefs";
 import "./did-app";
 
@@ -20,6 +20,28 @@ const items = [
 ] as const;
 
 const htmlString = "<b>I'm bold</b>";
+
+const TestComponent = ({ items }: any) => {
+    const elms = items.map((data, idx) => {
+        return <span>{idx} i komponent</span>;
+    });
+    return <div>{elms}</div>;
+};
+
+const BindingTest = () => {
+    const [data, setData] = useState("hej");
+    const [idx, setIdx] = useState(0);
+
+    const updateValue = (e) => {
+        setData(e.target.value);
+        setIdx(idx + 1);
+    };
+    return (
+        <div>
+            <input value={data} onChange={updateValue} /> data in input {data} {idx}
+        </div>
+    );
+};
 
 const html = (
     <div ref="kebab">
@@ -47,6 +69,8 @@ const html = (
         {[]}
         {{}}
         {'"><script>alert(document.cookie)</script>'}
+        <TestComponent items={items} />
+        <BindingTest />
         <div class="klass">klass</div>
         <div className="klassname">klassname</div>
         <ul>
