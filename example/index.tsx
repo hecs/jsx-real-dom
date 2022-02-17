@@ -1,5 +1,7 @@
-import { h, Fragment, useState } from "../lib/createelement";
+import { createContext, useContext } from "../lib/createContext";
+import { h, Fragment } from "../lib/createelement";
 import { getRefs } from "../lib/getRefs";
+import { useState } from "../lib/useState";
 import "./did-app";
 
 console.log("hello and welcome");
@@ -28,7 +30,7 @@ const TestComponent = ({ items }: any) => {
     return <div>{elms}</div>;
 };
 
-const BindingTest = () => {
+function BindingTest() {
     const [data, setData] = useState("hej");
     const [idx, setIdx] = useState(0);
 
@@ -41,7 +43,21 @@ const BindingTest = () => {
             <input value={data} onChange={updateValue} /> data in input {data} {idx}
         </div>
     );
-};
+}
+
+const customContext = createContext({ pelle: "fant" });
+
+function ContextConsumerTest() {
+    const {
+        data: { pelle },
+    } = useContext(customContext);
+    return <span>Context data: {pelle}</span>;
+}
+
+function ContextUpdaterTest({ text }) {
+    const { set } = useContext(customContext);
+    return <button onClick={() => set({ pelle: Math.random() * 1000 })}>{text}</button>;
+}
 
 const html = (
     <div ref="kebab">
@@ -58,6 +74,8 @@ const html = (
             <button ref="pizza" disabled textContent="Disabled knapp…" />
             <button ref="clickButton" textContent="Click knapp…" onClick={(e) => clickHandler(e)} />
         </div>
+        <ContextConsumerTest />
+
         <ce-app>
             <div class="insideslot">Inside slot</div>
         </ce-app>
@@ -96,6 +114,7 @@ const html = (
                 <Fragment>
                     <div>
                         <Fragment>
+                            <ContextUpdaterTest text="change context value" />
                             <Fragment>Inside multiple fragment</Fragment>
                         </Fragment>
                     </div>

@@ -11,7 +11,7 @@
         "module": "ES6",
         "moduleResolution": "node",
         "noImplicitReturns": true,
-        "strict": false,
+        "strict": true,
         "suppressImplicitAnyIndexErrors": true,
         "noImplicitAny": false
     }
