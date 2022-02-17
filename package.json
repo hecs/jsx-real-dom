@@ -4,7 +4,7 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "start": "tsc --noEmit && esbuild --bundle --serve --servedir=example --outdir=example example/index.tsx",
+        "start": "tsc --noEmit && esbuild --bundle --serve --servedir=example --outdir=example example/index.tsx example/binding.tsx",
         "temp-build": "esbuild --bundle --outdir=temp index.tsx"
     },
     "author": "",

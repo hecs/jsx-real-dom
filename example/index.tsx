@@ -1,9 +1,7 @@
-import { createContext, useContext } from "../lib/createContext";
-import { createCustomElement } from "../lib/createCustomElement";
 import { h, Fragment } from "../lib/createelement";
 import { getRefs } from "../lib/getRefs";
-import { useEffect } from "../lib/useEffect";
-import { useState } from "../lib/useState";
+import { useTranslations } from "../lib/translate";
+
 import "./did-app";
 
 console.log("hello and welcome");
@@ -32,56 +30,18 @@ const TestComponent = ({ items }: any) => {
     return <div>{elms}</div>;
 };
 
-const BindingTest = () => {
-    const [data, setData] = useState("hej");
-    const [idx, setIdx] = useState(0);
+const t = useTranslations({
+    key1: "translated text",
+    key2: "other translated text, {{age}} years old",
+});
 
-    const updateValue = (e) => {
-        setData(e.target.value);
-        setIdx(idx + 1);
-    };
-    useEffect(() => {
-        console.log("first load only");
-    }, []);
-    return (
-        <div>
-            <input value={data} onChange={updateValue} /> data in input {data} {idx}
-        </div>
-    );
-};
+const testar = "hej";
 
-const customContext = createContext({ pelle: "fant" });
+const valueObject = { age: 12 };
 
-const ContextConsumerTest = () => {
-    const {
-        data: { pelle },
-    } = useContext(customContext);
-    return <span>Context data: {pelle}</span>;
-};
+const someText = t`key2${valueObject}`;
 
-const ContextUpdaterTest = ({ text }) => {
-    const { set } = useContext(customContext);
-    return <button onClick={() => set({ pelle: Math.random() * 1000 })}>{text}</button>;
-};
-
-const CustomBoundElement = ({ text }) => {
-    const { data } = useContext(customContext);
-    return (
-        <div>
-            custom element generator with prop {text}, from context {JSON.stringify(data)}
-        </div>
-    );
-};
-
-createCustomElement("slask-elm", CustomBoundElement, () => (
-    <style>
-        {`
-            * {
-                background-color:blue;
-            }
-        `}
-    </style>
-));
+console.log(t("key2", valueObject));
 
 const html = (
     <div ref="kebab">
@@ -98,12 +58,10 @@ const html = (
             <button ref="pizza" disabled textContent="Disabled knapp…" />
             <button ref="clickButton" textContent="Click knapp…" onClick={(e) => clickHandler(e)} />
         </div>
-        <ContextConsumerTest />
 
         <ce-app>
             <div class="insideslot">Inside slot</div>
         </ce-app>
-        <slask-elm text="text from property" />
         {false}
         {null}
         {undefined}
@@ -113,8 +71,15 @@ const html = (
         {{}}
         {'"><script>alert(document.cookie)</script>'}
         <TestComponent items={items} />
-        <BindingTest />
-        <div class="klass">klass</div>
+
+        <div class="klass">
+            klass
+            <ul>
+                <li>
+                    <span>{someText}</span>
+                </li>
+            </ul>
+        </div>
         <div className="klassname">klassname</div>
         <ul>
             {items.map((i, index) => (
@@ -128,24 +93,29 @@ const html = (
         <div>As text: {htmlString}</div>
         <div dangerouslySetInnerHTML={{ __html: htmlString + " < dangerouslySetInnerHTML" }}></div>
         <label for="korv">Label attribute "for"</label>
-        <input id="korv" />
+        <input
+            id="korv"
+            data-plupp="testar"
+            onChange={(e) => {
+                console.log(e.target.dataset);
+            }}
+        />
         <label htmlFor="korv2">Label property "htmlFor"</label>
         <input id="korv2" />
-        <Fragment>
+        <>
             <div>Inside fragment</div>
-        </Fragment>
-        <Fragment>
-            <Fragment>
-                <Fragment>
+        </>
+        <>
+            <>
+                <>
                     <div>
-                        <Fragment>
-                            <ContextUpdaterTest text="change context value" />
-                            <Fragment>Inside multiple fragment</Fragment>
-                        </Fragment>
+                        <>
+                            <>Inside multiple </>
+                        </>
                     </div>
-                </Fragment>
-            </Fragment>
-        </Fragment>
+                </>
+            </>
+        </>
 
         <button disabled={false}>Boolean attributes (disabled=false)</button>
         <button disabled={true}>Boolean attributes (disabled=true)</button>

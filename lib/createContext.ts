@@ -1,10 +1,35 @@
 import { getOrCreateHook } from "./hooks";
 
 type ContextListener<T> = (T) => void;
-type Context<T> = () => any;
+type Context<T> = () => { data: T; set: (T) => void; listen: any };
+
+// function attachMutationListener(obj, listener) {
+//     const result = {};
+//     Object.keys(obj).forEach((key) => {
+//         Object.defineProperty(result, key, {
+//             get: function () {
+//                 return obj[key];
+//             },
+//             set: function (value) {
+//                 console.log("set", value, key);
+//                 if (obj[key] !== value) {
+//                     listener(key, value, obj[key]);
+//                     obj[key] = value;
+//                 }
+//             },
+//         });
+//     });
+//     return result;
+// }
 
 export function createContext<T>(initialValue: T): Context<T> {
-    let _context = initialValue;
+    let context = initialValue;
+    // let context = attachMutationListener(initialValue, () => {
+    //       setTimeout(() => {
+    //           publish(context);
+    //       }, 0);
+    //   });
+
     let listeners: ((T) => void)[] = [];
     const publish = (v) => {
         listeners.forEach((fn) => {
@@ -20,10 +45,10 @@ export function createContext<T>(initialValue: T): Context<T> {
 
     const getResult = () => {
         return {
-            data: _context,
+            data: { ...context },
             set: (updatedValue: T) => {
-                _context = updatedValue;
-                publish({ ..._context });
+                context = updatedValue;
+                publish(context);
             },
             listen: (listener: ContextListener<T>) => {
                 listeners.push(listener);

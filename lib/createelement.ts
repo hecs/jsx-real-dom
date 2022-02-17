@@ -1,22 +1,11 @@
 import { flattenDeep } from "./flatDeep-polyfill";
+import { createBoundComponent } from "./hooks";
 
-type Child = Node | string | undefined | boolean;
+type Child = Node | string;
 
 type TagType = string | ((props: any) => Node);
 
-type HookState = {
-    hooks: (() => any)[];
-    props: any;
-    render: () => void;
-    [key: string]: any;
-};
-
 export const Fragment = "Fragment";
-
-const replaceElement = (elm: Node, updatedElm: Node) => {
-    elm.parentNode?.replaceChild(updatedElm, elm);
-    return updatedElm;
-};
 
 export function h(
     tagName: TagType,
@@ -24,24 +13,7 @@ export function h(
     ...children: Child[]
 ): Child | Child[] {
     if (typeof tagName === "function") {
-        const props = { ...attrs, children };
-        let element;
-        const caller: HookState = {
-            props,
-            element,
-            hooks: [],
-            render: () => {
-                element = replaceElement(element, render());
-            },
-        };
-        tagName["_context"] = caller;
-
-        const render = () => {
-            caller.hookCount = 0;
-            return tagName(props);
-        };
-
-        return (element = render());
+        return createBoundComponent(tagName, { ...attrs, children });
     }
     if (tagName === Fragment) {
         return children;

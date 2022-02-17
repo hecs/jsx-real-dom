@@ -16,11 +16,20 @@ export function createCustomElement(tagName, renderFunction, style?) {
             }
             connectedCallback() {
                 const props = this.getProperties();
-                console.log("alsdj lakshd flakjshdfl", props);
-                if (style !== undefined) {
-                    this.#shadowRoot.append(h(style, props));
+                let styleElm;
+
+                if (typeof style === "function") {
+                    styleElm = h(style, props);
+                } else if (typeof style === "object") {
+                    styleElm = style;
+                } else if (typeof style === "string") {
+                    styleElm = document.createElement("style");
+                    styleElm.innerHTML = style;
                 }
-                this.#shadowRoot.append(h(renderFunction, props));
+                if (styleElm !== undefined) {
+                    this.#shadowRoot.append(styleElm);
+                }
+                this.#shadowRoot.append(h(renderFunction, props) as Node);
             }
         }
     );
