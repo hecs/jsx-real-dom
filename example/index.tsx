@@ -1,6 +1,8 @@
 import { createContext, useContext } from "../lib/createContext";
+import { createCustomElement } from "../lib/createCustomElement";
 import { h, Fragment } from "../lib/createelement";
 import { getRefs } from "../lib/getRefs";
+import { useEffect } from "../lib/useEffect";
 import { useState } from "../lib/useState";
 import "./did-app";
 
@@ -38,6 +40,9 @@ const BindingTest = () => {
         setData(e.target.value);
         setIdx(idx + 1);
     };
+    useEffect(() => {
+        console.log("first load only");
+    }, []);
     return (
         <div>
             <input value={data} onChange={updateValue} /> data in input {data} {idx}
@@ -59,6 +64,25 @@ const ContextUpdaterTest = ({ text }) => {
     return <button onClick={() => set({ pelle: Math.random() * 1000 })}>{text}</button>;
 };
 
+const CustomBoundElement = ({ text }) => {
+    const { data } = useContext(customContext);
+    return (
+        <div>
+            custom element generator with prop {text}, from context {JSON.stringify(data)}
+        </div>
+    );
+};
+
+createCustomElement("slask-elm", CustomBoundElement, () => (
+    <style>
+        {`
+            * {
+                background-color:blue;
+            }
+        `}
+    </style>
+));
+
 const html = (
     <div ref="kebab">
         <span>Hello and welcome to the example page.</span>
@@ -79,6 +103,7 @@ const html = (
         <ce-app>
             <div class="insideslot">Inside slot</div>
         </ce-app>
+        <slask-elm text="text from property" />
         {false}
         {null}
         {undefined}

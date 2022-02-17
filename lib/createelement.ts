@@ -1,11 +1,8 @@
 import { flattenDeep } from "./flatDeep-polyfill";
-import { StateResult } from "./useState";
 
-type Child = HTMLElement | string | undefined | boolean;
+type Child = Node | string | undefined | boolean;
 
-type TagType = string | ((props: any) => HTMLElement);
-
-// type HookFunction<T> = () => StateResult<T>;
+type TagType = string | ((props: any) => Node);
 
 type HookState = {
     hooks: (() => any)[];
@@ -16,7 +13,7 @@ type HookState = {
 
 export const Fragment = "Fragment";
 
-const replaceElement = (elm: HTMLElement, updatedElm: HTMLElement) => {
+const replaceElement = (elm: Node, updatedElm: Node) => {
     elm.parentNode?.replaceChild(updatedElm, elm);
     return updatedElm;
 };
