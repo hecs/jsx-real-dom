@@ -29,8 +29,14 @@ const html = (
         </p>
         <span style="color: green">Style as string</span>
         <span style={{ color: "red" }}>Style as object</span>
-        <div onMouseMove={console.log}>
+        <div
+            onMouseMove={console.log}
+            ref="mousearea"
+            style={{ padding: "20px", border: "1px dashed #ccc", position: "relative" }}
+        >
             This has onMouseMove event <br />
+            Position: <code ref="mousepos"></code>
+            <br />
             Buttons
             {":"}
             <button ref="pizza" disabled textContent="Disabled knapp…" />
@@ -85,6 +91,10 @@ const html = (
 );
 
 const refs = getRefs(html);
+refs.mousearea.addEventListener("mousemove", (ev: MouseEvent) => {
+    refs.mousepos.textContent = JSON.stringify({ x: ev.layerX, y: ev.layerY });
+});
+
 console.log("refs:", refs);
 html.style.color = "DarkOrchid";
 document.body.append(html);
