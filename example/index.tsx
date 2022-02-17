@@ -49,8 +49,8 @@ const html = (
         <p>
             <b>T</b>est
         </p>
-        <span style="color: green">Kebab</span>
-        <span style={{ color: "red" }}>Pizza</span>
+        <span style="color: green">Style as string</span>
+        <span style={{ color: "red" }}>Style as object</span>
         <div onMouseMove={console.log}>
             This has onMouseMove event <br />
             Buttons
