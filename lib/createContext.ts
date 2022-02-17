@@ -6,9 +6,13 @@ export function createContext<T>(initialValue: T): Context<T> {
     let listeners: ((T) => void)[] = [];
     const publish = (v) => {
         listeners.forEach((fn) => {
-            try {
-                (() => fn(v))();
-            } catch (err) {}
+            if (fn !== undefined) {
+                try {
+                    (() => fn(v))();
+                } catch (err) {
+                    console.error(err);
+                }
+            }
         });
     };
 
