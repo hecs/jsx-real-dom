@@ -30,7 +30,7 @@ const TestComponent = ({ items }: any) => {
     return <div>{elms}</div>;
 };
 
-function BindingTest() {
+const BindingTest = () => {
     const [data, setData] = useState("hej");
     const [idx, setIdx] = useState(0);
 
@@ -43,21 +43,21 @@ function BindingTest() {
             <input value={data} onChange={updateValue} /> data in input {data} {idx}
         </div>
     );
-}
+};
 
 const customContext = createContext({ pelle: "fant" });
 
-function ContextConsumerTest() {
+const ContextConsumerTest = () => {
     const {
         data: { pelle },
     } = useContext(customContext);
     return <span>Context data: {pelle}</span>;
-}
+};
 
-function ContextUpdaterTest({ text }) {
+const ContextUpdaterTest = ({ text }) => {
     const { set } = useContext(customContext);
     return <button onClick={() => set({ pelle: Math.random() * 1000 })}>{text}</button>;
-}
+};
 
 const html = (
     <div ref="kebab">
