@@ -14,24 +14,16 @@ export function h(
     }
     const el = document.createElement(tagName);
     if (attrs) {
-        if (attrs.className) {
-            attrs.class = `${attrs.class || ""} ${attrs.className || ""}`;
-            delete attrs.className;
-        }
         Object.assign(el, attrs);
         for (const [key, val] of Object.entries(attrs)) {
             if (key.startsWith("on")) {
                 el.addEventListener(key.slice(2, key.length).toLowerCase(), val, false);
             } else if (key === "dangerouslySetInnerHTML") {
                 el.innerHTML = val.__html || "";
-            } else if (key === "style") {
-                if (typeof attrs.style === "string") {
-                    el.setAttribute("style", val);
-                } else {
-                    Object.entries(attrs.style).forEach(([key, val]) => {
-                        el.style[key] = val;
-                    });
-                }
+            } else if (key === "style" && typeof attrs.style !== "string") {
+                Object.entries(attrs.style).forEach(([key, val]) => {
+                    el.style[key] = val;
+                });
             } else {
                 const isBooleanAttributeFalse = val === false;
                 if (!isBooleanAttributeFalse) {
