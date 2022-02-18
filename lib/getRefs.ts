@@ -10,11 +10,13 @@ export function getRefs(
         el.forEach((_e) => getRefs(_e, refs));
         return refs;
     }
-    const refKey = el.getAttribute("ref");
+    const refKey = el.getAttribute && el.getAttribute("ref");
     if (refKey) refs[refKey] = refs[refKey] ? flattenDeep([refs[refKey], el]) : el;
 
-    Array.from(el.children).forEach((c) => {
-        getRefs(c as HTMLElWithRef, refs);
-    });
+    if (el.children) {
+        Array.from(el.children).forEach((c) => {
+            getRefs(c as HTMLElWithRef, refs);
+        });
+    }
     return refs;
 }

@@ -93,10 +93,26 @@ const html = (
     </div>
 );
 
-const html2 = <Fragment>{true}</Fragment>;
+const html2 = (
+    <Fragment>
+        <div ref="falafel">Refs when root is Fragment with strange values</div>
+        {true}
+        {false}
+        {null}
+        {undefined}
+        {0}
+        {""}
+        {[]}
+        {{}}
+    </Fragment>
+);
 
 const refs = getRefs(html);
 
+const refs2 = getRefs(html2);
 console.log("refs:", refs);
+console.log("refs2:", refs2);
+
 html.style.color = "DarkOrchid";
-document.body.append(html, html2);
+
+document.body.append(html, ...html2);
