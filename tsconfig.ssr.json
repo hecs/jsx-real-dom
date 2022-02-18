@@ -1,8 +1,8 @@
 {
     "compileOnSave": true,
     "compilerOptions": {
-        "module": "commonjs",
-        "esModuleInterop": true,
+        "module": "ES2015",
+        "esModuleInterop": false,
         "target": "es2017",
         "moduleResolution": "node",
         "sourceMap": false,

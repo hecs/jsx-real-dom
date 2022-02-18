@@ -1,6 +1,7 @@
 import { createContext, useContext } from "../lib/createContext";
 import { createCustomElement } from "../lib/createCustomElement";
 import { h } from "../lib/createelement";
+import { hydrate } from "../lib/hydrate";
 import { useEffect } from "../lib/useEffect";
 import { useState } from "../lib/useState";
 
@@ -59,23 +60,27 @@ createCustomElement(
     </style>
 );
 
-document.body.append(
-    <div>
+const app = document.getElementById("app");
+if (app) {
+    hydrate(
+        app,
         <div>
-            <p>Custom elements with bound context</p>
-            <slask-elm text="text from property" />
+            <div>
+                <p>Custom elements with bound context</p>
+                <slask-elm text="text from property" />
+            </div>
+            <div>
+                <p>Regular context consumer</p>
+                <ContextConsumerTest />
+            </div>
+            <div>
+                <p>State hooks</p>
+                <BindingTest />
+            </div>
+            <div>
+                <p>Context updater</p>
+                <ContextUpdaterTest text="change context value" />
+            </div>
         </div>
-        <div>
-            <p>Regular context consumer</p>
-            <ContextConsumerTest />
-        </div>
-        <div>
-            <p>State hooks</p>
-            <BindingTest />
-        </div>
-        <div>
-            <p>Context updater</p>
-            <ContextUpdaterTest text="change context value" />
-        </div>
-    </div>
-);
+    );
+}

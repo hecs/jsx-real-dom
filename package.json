@@ -2,21 +2,22 @@
     "name": "jsx-real-dom",
     "version": "1.0.0",
     "description": "",
-    "main": "index.js",
+    "main": "ssr.js",
+    "type": "module",
     "scripts": {
-        "start": "tsc --noEmit && esbuild --bundle --serve --servedir=example --outdir=example example/index.tsx example/binding.tsx",
+        "start": "tsc --noEmit && esbuild --bundle --serve  --servedir=src/example --outdir=src/example src/example/index.tsx src/example/binding.tsx",
         "temp-build": "esbuild --bundle --outdir=temp index.tsx",
-        "build-ssr": "tsc -p tsconfig.ssr.json",
+        "build-ssr": "tsc -p tsconfig.ssr.json && esbuild --minify --bundle --outdir=example src/example/index.tsx src/example/binding.tsx",
         "ssr": "node ssr.js"
     },
     "author": "",
     "license": "ISC",
     "devDependencies": {
-        "esbuild": "^0.14.19",
         "prettier": "^2.5.1",
         "typescript": "^4.5.5"
     },
     "dependencies": {
+        "esbuild": "^0.14.19",
         "jsdom": "^19.0.0"
     }
 }

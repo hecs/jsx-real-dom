@@ -3,6 +3,7 @@
     "compilerOptions": {
         "target": "ES2015",
         "sourceRoot": "src",
+        "rootDir": "src",
         "outDir": "temp",
         "lib": ["ES2017", "dom"],
         "sourceMap": true,
