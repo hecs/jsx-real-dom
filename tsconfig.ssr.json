@@ -1,17 +1,18 @@
 {
     "compileOnSave": true,
     "compilerOptions": {
-        "target": "ES2015",
-        "outDir": "temp",
-        "lib": ["ES2017", "dom"],
-        "sourceMap": true,
+        "module": "commonjs",
+        "esModuleInterop": true,
+        "target": "es2017",
+        "moduleResolution": "node",
+        "sourceMap": false,
+        "outDir": "dist",
+        "rootDir": "src",
         "jsx": "react",
         "jsxFactory": "h",
         "jsxFragmentFactory": "Fragment",
-        "module": "ES6",
-        "moduleResolution": "node",
         "noImplicitReturns": true,
-        "strict": true,
+        "strict": false,
         "suppressImplicitAnyIndexErrors": true,
         "noImplicitAny": false
     }

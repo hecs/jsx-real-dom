@@ -1,5 +1,5 @@
 const contextName = "_context";
-
+const disable = !!globalThis.ssr;
 type HookState = {
     hooks: (() => any)[];
     props: any;
@@ -16,6 +16,9 @@ const replaceElement = (elm: Node, updatedElm: Node) => {
 };
 
 export function getOrCreateHook(createFunction) {
+    if (disable) {
+        return () => {};
+    }
     const context = getOrCreateHook.caller.caller[contextName];
     if (context === undefined) {
         throw new Error("Hooks needs a bound context");

@@ -12,6 +12,9 @@ export function h(
     attrs: { [key: string]: any },
     ...children: Child[]
 ): Child | Child[] {
+    if (globalThis.ssr !== undefined) {
+        globalThis.ssr(tagName, attrs, children);
+    }
     if (typeof tagName === "function") {
         return createBoundComponent(tagName, { ...attrs, children });
     }

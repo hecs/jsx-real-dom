@@ -62,14 +62,7 @@ const html = (
         <ce-app>
             <div class="insideslot">Inside slot</div>
         </ce-app>
-        {false}
-        {null}
-        {undefined}
-        {0}
-        {""}
-        {[]}
-        {{}}
-        {'"><script>alert(document.cookie)</script>'}
+
         <TestComponent items={items} />
 
         <div class="klass">

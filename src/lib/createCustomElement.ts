@@ -4,7 +4,7 @@ export function createCustomElement(tagName, renderFunction, style?) {
     customElements.define(
         tagName,
         class BaseComponent extends HTMLElement {
-            #shadowRoot = this.attachShadow({ mode: "closed" }); //{ mode: "closed" }
+            #shadowRoot = this.attachShadow({ mode: "closed" }); 
             constructor() {
                 super();
             }
@@ -16,12 +16,10 @@ export function createCustomElement(tagName, renderFunction, style?) {
             }
             connectedCallback() {
                 const props = this.getProperties();
-                let styleElm;
+                let styleElm = style;
 
                 if (typeof style === "function") {
                     styleElm = h(style, props);
-                } else if (typeof style === "object") {
-                    styleElm = style;
                 } else if (typeof style === "string") {
                     styleElm = document.createElement("style");
                     styleElm.innerHTML = style;
