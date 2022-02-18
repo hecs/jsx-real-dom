@@ -16,7 +16,7 @@ Features:
 
 Do not have:
 
--   No state managment or automatic DOM updates
+-   No state management or automatic DOM updates
 -   No types in jsx for tags or attributes
 -   Style objects doesn't know anything about units, use strings with units = { width: "200px" } instead of { width: 200 }
 
