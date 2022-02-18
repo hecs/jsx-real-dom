@@ -33,7 +33,6 @@ const html = (
             onMouseMove={(ev: MouseEvent) => {
                 refs.mousepos.textContent = JSON.stringify({ x: ev.offsetX, y: ev.offsetY });
             }}
-            
             style={{ padding: "20px", border: "1px dashed #ccc", position: "relative" }}
         >
             This has onMouseMove event <br />
@@ -68,6 +67,7 @@ const html = (
             ))}
         </ul>
         <div>As text: {htmlString}</div>
+        <div innerHTML={htmlString + " < innerHTML"}></div>
         <div dangerouslySetInnerHTML={{ __html: htmlString + " < dangerouslySetInnerHTML" }}></div>
         <label for="korv">Label attribute "for"</label>
         <input id="korv" />
