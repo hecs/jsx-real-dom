@@ -4,13 +4,16 @@ type Child = HTMLElement | string | undefined | boolean;
 
 export const Fragment = "Fragment";
 
+const filterOutBooleanAndObjects = (n) =>
+    n instanceof HTMLElement || !(typeof n === "object" || n == null || typeof n === "boolean");
+
 export function h(
     tagName: string,
     attrs: { [key: string]: any },
     ...children: Child[]
 ): Child | Child[] {
     if (tagName === Fragment) {
-        return children;
+        return children.filter(filterOutBooleanAndObjects);
     }
     const el = document.createElement(tagName);
     if (attrs) {
@@ -33,12 +36,7 @@ export function h(
         }
     }
 
-    const toAppend = flattenDeep(children).filter((n) => {
-        if (n instanceof HTMLElement) return true;
-        if (typeof n !== "object" && n != null && n !== false) return true;
-        return false;
-    });
-
+    const toAppend = flattenDeep(children).filter(filterOutBooleanAndObjects);
     el.append(...(toAppend as (string | Node)[]));
 
     return el;

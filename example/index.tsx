@@ -47,6 +47,7 @@ const html = (
         <ce-app>
             <div class="insideslot">Inside slot</div>
         </ce-app>
+        {true}
         {false}
         {null}
         {undefined}
@@ -92,8 +93,10 @@ const html = (
     </div>
 );
 
+const html2 = <Fragment>{true}</Fragment>;
+
 const refs = getRefs(html);
 
 console.log("refs:", refs);
 html.style.color = "DarkOrchid";
-document.body.append(html);
+document.body.append(html, html2);
