@@ -214,7 +214,4 @@ globalThis.loadProps = () => {
     return data;
 };
 
-hydrate(
-    document.getElementById("app"),
-    <Cart {...data} sku={data.articleNumber} title="Test artikel" imageurl="about:" />
-);
+hydrate(<Cart {...data} sku={data.articleNumber} title="Test artikel" imageurl="about:" />);

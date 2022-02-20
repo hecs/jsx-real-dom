@@ -1,12 +1,11 @@
-export function hydrate(parentElement, content) {
-    if (!parentElement) {
-        parentElement = document.createElement("div");
-        document.body.appendChild(parentElement);
+import { createEvent } from "./utils/events";
+
+export function hydrate(content, elm?) {
+    if (!elm) {
+        elm = document.body;
     }
-    parentElement.innerHTML = "";
-    parentElement.append(content);
-    const event = new Event("ssrdone", {
-        bubbles: true,
-    });
-    parentElement.dispatchEvent(event);
+    elm.innerHTML = "";
+
+    elm.append(content);
+    elm.dispatchEvent(createEvent("ssrdone"));
 }
