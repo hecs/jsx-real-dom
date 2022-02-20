@@ -1,5 +1,5 @@
 export function hydrate(parentElement, content) {
-    if (parentElement === undefined) {
+    if (!parentElement) {
         parentElement = document.createElement("div");
         document.body.appendChild(parentElement);
     }

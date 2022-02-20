@@ -43,7 +43,7 @@ const loadUrl = (pathname) =>
                 .then(({ outputFiles }) => {
                     const js = uint8arrayToStringMethod(outputFiles[0].contents);
 
-                    const dom = new JSDOM(`<html><body><div id="app"></div></body></html>`, {
+                    const dom = new JSDOM(`<html><body></body></html>`, {
                         url: "https://react.js",
                         runScripts: "dangerously",
                         includeNodeLocations: true,
