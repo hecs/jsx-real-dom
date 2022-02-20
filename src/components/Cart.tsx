@@ -108,19 +108,17 @@ const Store = ({
 
 const Placeholder = ({ noi, height }) => {
     const elms: Node[] = [];
+    console.log("placeholder", noi);
     for (var i = 0; i < noi; i++) {
+        console.log("placeholder item", i);
         elms.push(
-            <div
-                key={`ph${i}`}
-                className="placeholder"
-                style={{ height, marginBottom: "0.625rem" }}
-            >
-                {}
+            <div className="placeholder" style={{ height, marginBottom: "0.625rem" }}>
+                Loading
             </div>
         );
     }
 
-    return <>{elms}</>;
+    return <div>{elms}</div>;
 };
 
 const requestLocationAndFetchStores = (articleNumber) => () =>
@@ -133,11 +131,12 @@ const requestLocationAndFetchStores = (articleNumber) => () =>
 
 const Cart = ({ articleNumber, title, imageurl, ...dynamic }) => {
     const [activeTab, setActiveTab] = useState(0);
+    const enabled = activeTab == 1 && articleNumber;
     const { isLoading, data: stores } = useQuery(
         requestLocationAndFetchStores(articleNumber),
         ["store", activeTab],
         {
-            enabled: activeTab == 1 && articleNumber,
+            enabled,
         }
     );
 
@@ -149,13 +148,14 @@ const Cart = ({ articleNumber, title, imageurl, ...dynamic }) => {
     const storesNumber = availability.availableForCollectAtStoreCount || 0;
 
     const { PrimaryStore: primary, CloseByStores: close } = stores || {};
+    console.log(isLoading);
     const storeElm =
-        stores && !isLoading ? (
+        isLoading || !enabled ? (
+            <Placeholder noi={Math.min(storesNumber, 3) + 1} height="204px" />
+        ) : (
             [primary, ...close].map((store) => (
                 <Store key={store.id} {...store} cartItem={cartItem} />
             ))
-        ) : (
-            <Placeholder noi={Math.min(storesNumber, 3)} height="204px" />
         );
 
     return (

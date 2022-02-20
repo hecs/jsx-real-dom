@@ -119,4 +119,4 @@ const html = (
 const refs = getRefs(html);
 console.log("refs:", refs);
 html.style.color = "DarkOrchid";
-hydrate(document.getElementById("app"), html);
+hydrate(html);

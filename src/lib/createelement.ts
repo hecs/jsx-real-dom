@@ -1,4 +1,3 @@
-import { flattenDeep } from "./flatDeep-polyfill";
 import { createBoundComponent } from "./hooks/hooks";
 
 type Child = Node | string | undefined | boolean;
@@ -7,6 +6,10 @@ export const Fragment = "Fragment";
 
 const filterOutBooleanAndObjects = (n: any) =>
     n instanceof HTMLElement || !(typeof n === "object" || n == null || typeof n === "boolean");
+
+function getValidChildren(children): (Node | string)[] {
+    return children.flat(Infinity).filter(filterOutBooleanAndObjects);
+}
 
 export function h(
     tagName: string | ((props: any) => Node),
@@ -17,7 +20,7 @@ export function h(
         return createBoundComponent(tagName, { ...attrs, children });
     }
     if (tagName === Fragment) {
-        return children.filter(filterOutBooleanAndObjects);
+        return getValidChildren(children);
     }
     const el = document.createElement(tagName);
     if (attrs) {
@@ -35,8 +38,7 @@ export function h(
         }
     }
 
-    const toAppend = flattenDeep(children).filter(filterOutBooleanAndObjects);
-    el.append(...(toAppend as (string | Node)[]));
+    el.append(...getValidChildren(children));
 
     return el;
 }
