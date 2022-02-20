@@ -14,7 +14,7 @@ export function useTranslations(input) {
         if (!props) return value;
         return value.replace(/\{\{(.+)\}\}/gi, (s, prop) => {
             const r = props[prop.trim()];
-            return r === undefined ? s : r;
+            return r !== undefined ? r : s;
         });
     };
 }

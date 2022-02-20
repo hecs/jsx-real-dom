@@ -24,12 +24,14 @@ const loadUrl = (pathname) =>
         } else {
             const isInject = pathname.includes("/inject");
             const fileName = pathname.replace("/inject", "");
+            console.log("file", fileName);
 
             //const c = fs.readFileSync(path.join(buildDir, fileName + ".js")).toString();
             esbuild
                 .build({
                     minify: true,
                     bundle: true,
+                    inject: ["module.js"],
                     platform: "node",
                     tsconfig: "tsconfig.ssr.json",
                     entryPoints: ["./src" + fileName + ".jsx"],
@@ -38,26 +40,30 @@ const loadUrl = (pathname) =>
                     write: false,
                     jsxFragment: "Fragment",
                 })
-                .then((script) => {
-                    const js = uint8arrayToStringMethod(script.outputFiles[0].contents);
-                    console.log("script", js);
-                    const dom = new JSDOM(
-                        `<html><body><div id="app"></div></body></html><script>${js}</script>`,
-                        {
-                            url: "https://react.js",
-                            runScripts: "dangerously",
-                            includeNodeLocations: true,
+                .then(({ outputFiles }) => {
+                    const js = uint8arrayToStringMethod(outputFiles[0].contents);
+
+                    const dom = new JSDOM(`<html><body><div id="app"></div></body></html>`, {
+                        url: "https://react.js",
+                        runScripts: "dangerously",
+                        includeNodeLocations: true,
+                    });
+                    const {
+                        window: { document: doc, addEventListener },
+                    } = dom;
+                    addEventListener("ssrdone", (e) => {
+                        if (dom.window.loadProps) {
+                            console.log("hoho", dom.window.loadProps());
                         }
-                    );
-                    //dom.window.document.addEventListener("error", console.log);
-                    dom.window.document.addEventListener("load", () => {
                         const result = isInject
-                            ? dom.window.document.getElementById("app").innerHTML +
-                              `<script>${js}</script>`
-                            : dom.window.document.body.innerHTML;
-                        cache[pathname] = result;
+                            ? e.target.innerHTML + `<script>${js}</script>`
+                            : doc.body.innerHTML;
+                        //cache[pathname] = result;
                         res(result);
                     });
+                    const scriptElm = doc.createElement("script");
+                    scriptElm.innerHTML = js;
+                    doc.body.appendChild(scriptElm);
                 });
         }
     });

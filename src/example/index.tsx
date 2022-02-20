@@ -1,6 +1,7 @@
 import { h, Fragment } from "../lib/createelement";
 import { getRefs } from "../lib/getRefs";
-import { useTranslations } from "../lib/translate";
+import { hydrate } from "../lib/hydrate";
+import { useTranslations } from "../lib/utils/translate";
 
 import "./did-app";
 
@@ -118,4 +119,4 @@ const html = (
 const refs = getRefs(html);
 console.log("refs:", refs);
 html.style.color = "DarkOrchid";
-document.body.append(html);
+hydrate(document.getElementById("app"), html);

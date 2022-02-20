@@ -1,0 +1,148 @@
+<style>
+	.addtocart {
+		border-radius: 3.5rem;
+		height: 3.5rem;
+		background: #6aa334;
+		width: 100%;
+		color: #fff;
+		border: 0;
+		box-shadow: 0;
+		font-weight: 700;
+		cursor: pointer;
+		font-size: 20px;
+		font-family: ElkjopBodytext, sans-serif;
+		transition: box-shadow 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+	}
+
+	.stores {
+		padding-top: 1.25rem;
+	}
+
+	.address {
+		color: #767676;
+		font-size: 0.75rem;
+		line-height: 1.75;
+	}
+
+	.stock {
+		font-weight: 700;
+	}
+
+	.green {
+		color: #6aa334;
+	}
+
+	.red {
+		color: red;
+	}
+
+	.store {
+		margin-bottom: 0.625rem;
+		padding: 0.9375rem 1.25rem;
+		border: 0.0625rem solid #d2d2d2;
+		border-radius: 0.25rem;
+		background: #fff;
+		box-shadow: 0 0.25rem 0 0 rgb(172 154 154 / 15%);
+		font-size: 0.875rem;
+		line-height: 1.5;
+	}
+
+	.store .addtocart {
+		margin-top: 0.75rem;
+	}
+
+	.tabs {
+		margin-top: -0.0625rem;
+	}
+
+	.btns {
+		display: flex;
+	}
+
+	.btns button span {
+		cursor: pointer;
+		display: block;
+		font-size: 1.5rem;
+		font-weight: 700;
+		font-family: ElkjopBodytext, sans-serif;
+	}
+
+	.i {
+		font-size: 0.875rem;
+		font-style: normal;
+	}
+
+	.btns button {
+		display: block;
+		width: 50%;
+		position: relative;
+		bottom: -0.0625rem;
+		border: 0.0625rem solid #f5f5f5;
+		border-bottom: 0;
+		background-color: #f5f5f5;
+		cursor: default;
+		padding: 0.9375rem 1.25rem 1.25rem;
+	}
+
+	.pn {
+		padding: 3rem;
+	}
+
+	.btns button.selected {
+		border-top-color: #000;
+		background-color: #fdfdfd;
+	}
+
+	.btns button.disabled {
+		color: #aaa;
+	}
+
+	.tab {
+		background-color: #fdfdfd;
+		border: 0.0625rem solid #f5f5f5;
+	}
+
+	.placeholder {
+		background-color: #fafafa;
+		border: #eaeaea;
+		position: relative;
+		display: block;
+		overflow: hidden;
+		width: 100%;
+	}
+
+	.placeholder::before {
+		position: absolute;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 50%;
+		z-index: 1;
+		width: 500%;
+		margin-left: -250%;
+		background: linear-gradient(to right, #fafafa 26%, #e1e1e1 50%, #fafafa 70%) 50% 50%;
+		animation: phAnimation 0.8s linear infinite;
+		content: " ";
+		pointer-events: none;
+	}
+
+	@keyframes phAnimation {
+		0% {
+			transform: translate3d(-40%, 0, 0);
+		}
+
+		100% {
+			transform: translate3d(40%, 0, 0);
+		}
+	}
+
+	#app {
+		width: 400px;
+		margin: 0 auto;
+	}
+</style>
+
+<body>
+	<div id="app"></div>
+	<script src="cart.js"></script>
+</body>

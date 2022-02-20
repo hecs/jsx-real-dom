@@ -2,8 +2,8 @@ import { createContext, useContext } from "../lib/createContext";
 import { createCustomElement } from "../lib/createCustomElement";
 import { h } from "../lib/createelement";
 import { hydrate } from "../lib/hydrate";
-import { useEffect } from "../lib/useEffect";
-import { useState } from "../lib/useState";
+import { useEffect } from "../lib/hooks/useEffect";
+import { useState } from "../lib/hooks/useState";
 
 const BindingTest = () => {
     const [data, setData] = useState("hej");
@@ -51,36 +51,33 @@ createCustomElement(
     CustomBoundElement,
     <style>
         {`
-					* {
-							background-color:blue;
-							padding:1rem;
-							color:#fff;
-					}
+    * {
+            background-color:blue;
+            padding:1rem;
+            color:#fff;
+    }
 			`}
     </style>
 );
 
-const app = document.getElementById("app");
-if (app) {
-    hydrate(
-        app,
+hydrate(
+    document.getElementById("app"),
+    <div>
         <div>
-            <div>
-                <p>Custom elements with bound context</p>
-                <slask-elm text="text from property" />
-            </div>
-            <div>
-                <p>Regular context consumer</p>
-                <ContextConsumerTest />
-            </div>
-            <div>
-                <p>State hooks</p>
-                <BindingTest />
-            </div>
-            <div>
-                <p>Context updater</p>
-                <ContextUpdaterTest text="change context value" />
-            </div>
+            <p>Custom elements with bound context</p>
+            <slask-elm text="text from property" />
         </div>
-    );
-}
+        <div>
+            <p>Regular context consumer</p>
+            <ContextConsumerTest />
+        </div>
+        <div>
+            <p>State hooks</p>
+            <BindingTest />
+        </div>
+        <div>
+            <p>Context updater</p>
+            <ContextUpdaterTest text="change context value" />
+        </div>
+    </div>
+);

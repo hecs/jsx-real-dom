@@ -1,33 +1,30 @@
 const contextName = "_context";
-const disable = !!globalThis.ssr;
 type HookState = {
-    hooks: (() => any)[];
+    element?: Node;
+    hooks: ((...args: any[]) => any)[];
     props: any;
     render: () => void;
     [key: string]: any;
 };
 const replaceElement = (elm: Node, updatedElm: Node) => {
     if (elm.parentNode && updatedElm) {
-        elm.parentNode?.replaceChild(updatedElm, elm);
+        elm.parentNode.replaceChild(updatedElm, elm);
         return updatedElm;
     }
-    console.warn("could not update", elm, elm.parentNode, updatedElm);
+    console.warn("could not update", elm, updatedElm);
     return elm;
 };
 
-export function getOrCreateHook(createFunction) {
-    if (disable) {
-        return () => {};
-    }
-    const context = getOrCreateHook.caller.caller[contextName];
+export function getOrCreateHook(createFunction: (...args: any[]) => any, ...args) {
+    const context = getOrCreateHook.caller.caller[contextName] as HookState;
     if (context === undefined) {
         throw new Error("Hooks needs a bound context");
     }
-    if (context.hookCount < (context.hooks || []).length) {
-        return context.hooks[context.hookCount++]();
+    if (context.i < (context.hooks || []).length) {
+        return context.hooks[context.i++](...args);
     }
-    const hookFunction = createFunction(context);
-    context.hookCount = context.hooks.push(hookFunction);
+    const hookFunction = createFunction(context, ...args);
+    context.i = context.hooks.push(hookFunction);
     return hookFunction();
 }
 
@@ -44,7 +41,7 @@ export function createBoundComponent(component, props): (Node | string)[] {
     component[contextName] = caller;
 
     const render = () => {
-        caller.hookCount = 0;
+        caller.i = 0;
         return component(props);
     };
 

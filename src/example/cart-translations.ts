@@ -1,0 +1,18 @@
+export const cartTranslations = {
+    "collect.message.noSuffix.day": "Hämta om ca {{ time }} dag",
+    "openingHours.open": "Öppet till {{ time }}",
+    "openingHours.opensOn": "Stängt, öppnar {{ day }} {{ time }}",
+    "collect.message.at.hours": "Hämta om ca {{ time }} timmar från",
+    "collect.message.noSuffix.days": "Hämta om ca  {{ time }} dagar",
+    "availability.deliveryDate": "Leverans {{ date }}",
+    "availability.deliveryDateWithPrice": "Leverans {{ date }} för {{ price }} till postnummer:",
+    "availability.inStock": "På lager",
+    "availability.notAvailable": "Ej i lager",
+    "productOptions.overlay.subtitle": "Leverans till postnummer:",
+    addtocart: "Lägg i kundvagn",
+    homeDeliveryHeadline: "Leverans",
+    storeDeliveryHeadline: "Hämta i butik",
+    "collect.message.noSuffix.onDate": "Hämtas den {{ date }}",
+    "availability.seeAllInCheckout": "Se alla leveransalternativ i kassan",
+    "stores.storesNearYou": "Finns i lager i {{storesNumber}} butiker",
+};

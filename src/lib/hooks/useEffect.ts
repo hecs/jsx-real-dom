@@ -1,17 +1,14 @@
 import { getOrCreateHook } from "./hooks";
+import { compareArray } from "../utils/compareArrays";
 
-const compareArray = (a, b) => {
-    return JSON.stringify(a) == JSON.stringify(b);
-};
-
-export function useEffect(callback, values) {
+export function useEffect(...args) {
     return getOrCreateHook((_) => {
         let lastValues;
-        return () => {
+        return (cb, values) => {
             if (!compareArray(values, lastValues)) {
-                callback();
+                cb(values);
                 lastValues = values;
             }
         };
-    });
+    }, ...args);
 }
