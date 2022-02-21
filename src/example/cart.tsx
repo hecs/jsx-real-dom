@@ -15,7 +15,7 @@ const data = {
         activePriceExVAT: 10396.8,
         displaySavePrice: false,
     },
-    availability: { availableBItemGradeCount: 0, availableForCollectAtStoreCount: 0 },
+    availability: { availableBItemGradeCount: 0, availableForCollectAtStoreCount: 20 },
     relationships: { cheapestBItem: null },
     qlc: { active: false, recaptchaRequired: false },
 };

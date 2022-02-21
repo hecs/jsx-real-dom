@@ -6,111 +6,91 @@ import { useState } from "../lib/hooks/useState";
 import { cartTranslations } from "./cart-translations";
 import { createEventChange } from "../lib/utils/events";
 
-const days = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-    "Sunday",
-];
-
 const opensAt = (openHours) => {
     const date = new Date();
 
-    const normalHours = openHours[days[date.getDay()]];
-    //console.log(normalHours);
-    const opensAt = normalHours.Opening.Hours;
-    const closesAt = normalHours.Closing.Hours;
+    const normalHours = openHours.normal[date.getDay()];
+
+    const opensAt = normalHours.opening.hours;
+    const closesAt = normalHours.closing.hours;
     const currentHour = date.getHours();
     if (opensAt > currentHour) {
-        return `Lukket. Åbner kl. ${opensAt}`;
+        return t("openingHours.open", { day: "", time: closesAt });
     }
     if (closesAt <= currentHour) {
-        return `Lukket. Åbner i morgen kl. ${opensAt}`;
+        return t("openingHours.opensOn", { day: "imorgon", time: opensAt });
     }
     return `Öppet, stänger kl. ${closesAt}`;
 };
 
 const t = useTranslations(cartTranslations);
 
-const MINUTE = 60 * 1000;
-const HOUR = MINUTE * 60;
-
-const getTime = (timeString) => {
-    const pickupTime = new Date(timeString);
-    const now = new Date();
-    const diff = pickupTime.getTime() - now.getTime();
-    if (diff <= HOUR * 2) {
-        return t("collect.message.at.hour", { time: 1 });
+const getTime = (state, deliveryTime, pickupTime) => {
+    if (state > 0) {
+        if (pickupTime <= 60) {
+            return t("collectInMinutes", { time: Math.round(pickupTime) });
+        }
+        if (pickupTime < 60 * 8) {
+            const hourDiff = Math.ceil(pickupTime / 60);
+            return t("collectInHours", { time: hourDiff });
+        }
+        return t("collect.message.noSuffix.days", { time: Math.ceil(pickupTime / (60 * 24)) });
     }
-    if (diff < HOUR * 4) {
-        const hourDiff = Math.ceil(diff / HOUR);
-        return t("collect.message.at.hours", { time: hourDiff });
-    }
-
-    return t("collect.message.noSuffix.onDate", { date: pickupTime.toLocaleDateString() });
-};
-
-const productOptions = {
-    headers: {
-        Accept: "application/json",
-        isB2BCustomer: "false",
-    },
+    return t("collect.message.noSuffix.days", { time: deliveryTime });
 };
 
 const getClosestStore = (articleNumber, { longitude, latitude }) =>
     cachedPromise(`store-${articleNumber}`, () =>
         fetch(
-            `https://ecom.knatofs.se/Masterdata/Organization/v3/MainOperatingChain/OCSEELG/NearbyStoresWithProduct/${articleNumber}/?longitude=${longitude}&latitude=${latitude}&distanceThresholdKm=200`,
-            { mode: "no-cors" }
+            `http://localhost:3009/storesWithProduct/${articleNumber}/?lng=${longitude}&lat=${latitude}&distance=200`
         ).then((d) => d.json())
     );
 
 const addToCart = createEventChange("add-to-cart");
 
+const stockLevels = ["red", "yellow", "green"];
+
+const stockCodes = ["noStock", "lowStock", "inStock"];
+
 const Store = ({
-    Name,
-    DistanceFromOriginKilometers,
-    InStock,
-    PickupTime,
-    Address,
-    OpeningHours,
+    displayName,
+    open = false,
+    distance,
+    state,
+    address,
+    deliveryTime,
+    openHours,
+    onClick = (e) => {},
+    pickupTime = 30,
     cartItem,
 }: any = {}) => {
-    const { City, Street, HouseNumber, PostalCode } = Address || {};
     return (
-        <div className="store">
+        <div className="store" onClick={onClick}>
             <div>
-                <strong>{Name}</strong>&nbsp;∙&nbsp;
-                <span>{Math.round(DistanceFromOriginKilometers)} km</span>
+                <strong>{displayName}</strong>&nbsp;∙&nbsp;
+                <span>{Math.round(distance)} km</span>
             </div>
             <div>
-                <span className={"stock " + InStock ? "green" : "red"}>
-                    {t(InStock ? "availability.inStock" : "availability.notAvailable")}
-                </span>
-                {}
-                <span>{getTime(PickupTime)}</span>
+                <span className={"stock " + stockLevels[state]}>{t(stockCodes[state])}</span>,&nbsp;
+                <span>{getTime(state, deliveryTime, pickupTime)}</span>
             </div>
-            <div>{opensAt(OpeningHours)}</div>
-            <span class="address">
-                {Street} {HouseNumber}, {PostalCode} {City}
-            </span>
+            <div>{opensAt(openHours)}</div>
+            {open && (
+                <div>
+                    <span class="address">{address}</span>
 
-            <button className="addtocart" onClick={addToCart(cartItem)}>
-                {t("addtocart")}
-            </button>
+                    <button className="addtocart" onClick={addToCart(cartItem)}>
+                        {t("addtocart")}
+                    </button>
+                </div>
+            )}
         </div>
     );
 };
 
 const Placeholder = ({ noi, height }) => {
     const elms: Node[] = [];
-    console.log("placeholder", noi);
     for (var i = 0; i < noi; i++) {
-        console.log("placeholder item", i);
         elms.push(
             <div className="placeholder" style={{ height, marginBottom: "0.625rem" }}>
                 Loading
@@ -120,6 +100,8 @@ const Placeholder = ({ noi, height }) => {
 
     return <div>{elms}</div>;
 };
+
+const limit = (arr = [], limit = 10) => arr.slice(0, Math.min(limit, arr.length));
 
 const requestLocationAndFetchStores = (articleNumber) => () =>
     new Promise((res, _) => {
@@ -131,8 +113,10 @@ const requestLocationAndFetchStores = (articleNumber) => () =>
 
 const Cart = ({ articleNumber, title, imageurl, ...dynamic }) => {
     const [activeTab, setActiveTab] = useState(0);
+    const [visibleNoi, setVisibleNoi] = useState(6);
+    const [open, setOpen] = useState("");
     const enabled = activeTab == 1 && articleNumber;
-    const { isLoading, data: stores } = useQuery(
+    const { isLoading, data } = useQuery(
         requestLocationAndFetchStores(articleNumber),
         ["store", activeTab],
         {
@@ -147,14 +131,22 @@ const Cart = ({ articleNumber, title, imageurl, ...dynamic }) => {
     const cisDisabled = !sellability.buyableCollectAtStore;
     const storesNumber = availability.availableForCollectAtStoreCount || 0;
 
-    const { PrimaryStore: primary, CloseByStores: close } = stores || {};
-    console.log(isLoading);
+    const { available, stores } = data || {};
+
+    const getStoreData = ({ id, ...rest }) => ({ ...stores.find((d) => d.id == id), id, ...rest });
+
     const storeElm =
         isLoading || !enabled ? (
-            <Placeholder noi={Math.min(storesNumber, 3) + 1} height="204px" />
+            <Placeholder noi={Math.min(storesNumber, 6) + 1} height="204px" />
         ) : (
-            [primary, ...close].map((store) => (
-                <Store key={store.id} {...store} cartItem={cartItem} />
+            limit(available, visibleNoi).map((a, i) => (
+                <Store
+                    key={a.id}
+                    {...getStoreData(a)}
+                    open={open ? open == a.id : i === 0}
+                    onClick={(e) => setOpen(open === a.id ? "" : a.id)}
+                    cartItem={cartItem}
+                />
             ))
         );
 
@@ -186,7 +178,14 @@ const Cart = ({ articleNumber, title, imageurl, ...dynamic }) => {
                             </button>
                         </div>
                     )}
-                    {activeTab == 1 && <div className="tab pn">{storeElm}</div>}
+                    {activeTab == 1 && (
+                        <div className="tab pn">
+                            {storeElm}
+                            {visibleNoi < available?.length && (
+                                <span onClick={() => setVisibleNoi(visibleNoi + 10)}>Mer</span>
+                            )}
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

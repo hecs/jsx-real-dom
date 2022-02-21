@@ -26,7 +26,6 @@ export function useQuery(fetchMethod: () => Promise<any>, keys: any[], options: 
                             ctx.render();
                         });
                 }
-                console.log("return", data, isLoading);
                 return { isLoading, data, error };
             };
         },
