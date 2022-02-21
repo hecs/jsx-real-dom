@@ -49,8 +49,7 @@ const StoreMap = ({}) => {
                         () => {
                             console.log(store);
                             const storeElm = storesParent.querySelector("#store" + store.id);
-                            //const pos = storeElm.getBoundingClientRect();
-                            // console.log(store, storeElm, pos);
+
                             storesParent.parentNode.scroll({
                                 behavior: "smooth",
                                 left: storeElm.offsetLeft,
@@ -87,11 +86,7 @@ const StoreMap = ({}) => {
     return (
         <div ref={renderMap} style={{ position: "absolute", width: "800px", height: "600px" }}>
             <div className="storecnt">
-                <div
-                    ref={(elm) => {
-                        storesParent = elm;
-                    }}
-                ></div>
+                <div ref={(elm) => (storesParent = elm)}></div>
             </div>
         </div>
     );
