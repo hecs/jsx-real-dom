@@ -112,7 +112,7 @@ const loadUrl = (pathname) =>
                     // const page = module.exports.default.apply(dom.window, [props]);
                     // res("hej", page);
 
-                    addEventListener("ssrdone", (e) => {
+                    addEventListener("renderd", (e) => {
                         const result = `${e.target.innerHTML}<script>${transformJs(
                             js,
                             props
@@ -130,7 +130,7 @@ const loadUrl = (pathname) =>
                         root.setAttribute('id', '__root');
                         document.body.append(root)
                         root.append(module.exports.default(props));
-                        root.dispatchEvent(new Event('ssrdone', { bubbles: true }))`;
+                        root.dispatchEvent(new Event('renderd', { bubbles: true }))`;
                     doc.body.appendChild(scriptElm);
                 });
         }

@@ -19,5 +19,5 @@
 	root.setAttribute('id', '__root');
 	document.body.append(root)
 	root.append(module.exports.default(props));
-	document.body.dispatchEvent(new Event('ssrdone', { bubbles: true }))
+	document.body.dispatchEvent(new Event('renderd', { bubbles: true }))
 </script>

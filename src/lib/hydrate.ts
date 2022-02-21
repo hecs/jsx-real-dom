@@ -1,3 +1,4 @@
+import { getRefs } from "./getRefs";
 import { createEvent } from "./utils/events";
 
 export function hydrate(content, elm?) {
@@ -7,5 +8,6 @@ export function hydrate(content, elm?) {
     elm.innerHTML = "";
 
     elm.append(content);
-    elm.dispatchEvent(createEvent("ssrdone"));
+    elm.dispatchEvent(createEvent("renderd"));
+    return getRefs(elm);
 }
