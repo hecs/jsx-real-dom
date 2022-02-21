@@ -101,7 +101,7 @@ const Placeholder = ({ noi, height }) => {
     return <div>{elms}</div>;
 };
 
-const limit = (arr = [], limit = 10) => arr.slice(0, Math.min(limit, arr.length));
+const limit = (arr = [], limit = 10): any[] => arr.slice(0, Math.min(limit, arr.length));
 
 const requestLocationAndFetchStores = (articleNumber) => () =>
     new Promise((res, _) => {
@@ -111,7 +111,7 @@ const requestLocationAndFetchStores = (articleNumber) => () =>
         });
     });
 
-const Cart = ({ articleNumber, title, imageurl, ...dynamic }) => {
+const Cart = ({ articleNumber, title, imageUrl, ...dynamic }) => {
     const [activeTab, setActiveTab] = useState(0);
     const [visibleNoi, setVisibleNoi] = useState(6);
     const [open, setOpen] = useState("");
@@ -126,25 +126,25 @@ const Cart = ({ articleNumber, title, imageurl, ...dynamic }) => {
 
     const { availability = {}, sellability = {} } = dynamic || {};
 
-    const cartItem = { articleNumber: articleNumber, imageUrl: imageurl, title, amount: 1 };
+    const cartItem = { articleNumber: articleNumber, imageUrl, title, amount: 1 };
 
     const cisDisabled = !sellability.buyableCollectAtStore;
     const storesNumber = availability.availableForCollectAtStoreCount || 0;
 
     const { available, stores } = data || {};
 
-    const getStoreData = ({ id, ...rest }) => ({ ...stores.find((d) => d.id == id), id, ...rest });
+    const getStoreData = (id, rest) => ({ ...stores.find((d) => d.id == id), id, ...rest });
 
     const storeElm =
         isLoading || !enabled ? (
             <Placeholder noi={Math.min(storesNumber, 6) + 1} height="204px" />
         ) : (
-            limit(available, visibleNoi).map((a, i) => (
+            limit(available, visibleNoi).map(({ id, ...data }, i) => (
                 <Store
-                    key={a.id}
-                    {...getStoreData(a)}
-                    open={open ? open == a.id : i === 0}
-                    onClick={(e) => setOpen(open === a.id ? "" : a.id)}
+                    key={id}
+                    {...getStoreData(id, data)}
+                    open={open ? open == id : i === 0}
+                    onClick={() => setOpen(open === id ? "" : id)}
                     cartItem={cartItem}
                 />
             ))

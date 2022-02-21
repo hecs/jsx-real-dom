@@ -1,0 +1,35 @@
+<style>
+	.store {
+		display: flex;
+		min-width: 250px;
+		height: 80px;
+		background-color: #fff;
+		padding: 10px;
+		margin-right: 10px;
+		border-radius: 3px;
+	}
+
+	.storecnt {
+		position: absolute;
+		bottom: 10px;
+		overflow: hidden;
+		left: 10px;
+		right: 10px;
+		height: 110px;
+		z-index: 99999;
+	}
+
+	.storecnt>div {
+		display: flex;
+		position: relative;
+		flex-direction: row;
+		width: auto;
+	}
+</style>
+<link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.1/mapsjs-ui.css" />
+
+<body>
+	<div id="app"></div>
+	<elm-maps />
+	<script src="maps.js"></script>
+</body>

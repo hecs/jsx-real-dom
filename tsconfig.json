@@ -1,6 +1,7 @@
 {
     "compileOnSave": true,
     "compilerOptions": {
+        "allowSyntheticDefaultImports": true,
         "target": "ES2015",
         "sourceRoot": "src",
         "rootDir": "src",

@@ -1,10 +1,10 @@
 import Cart from "../components/Cart";
+import { createActiveElement } from "../lib/createCustomElement";
 import { h, Fragment } from "../lib/createelement";
-import { hydrate } from "../lib/hydrate";
 
 const data = {
     title: "Test artikel",
-    imageurl: "about:",
+    imageUrl: "about:",
     articleNumber: "16694",
     mainOperatingChain: "OCSEELG",
     sellability: { buyableOnline: true, buyableInternet: true, buyableCollectAtStore: true },
@@ -20,4 +20,5 @@ const data = {
     qlc: { active: false, recaptchaRequired: false },
 };
 
-hydrate(<Cart {...data} />);
+createActiveElement("add-to-cart", (attrs) => <Cart {...data} />, ["sku"]);
+//hydrate(<Cart {...data} />);

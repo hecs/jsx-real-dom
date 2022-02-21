@@ -1,3 +1,5 @@
+import { getRefsArray } from "../getRefs";
+
 const contextName = "_context";
 type HookState = {
     element?: Node;
@@ -42,7 +44,17 @@ export function createBoundComponent(component: (props: any) => Node, props): No
 
     const render = () => {
         caller.i = 0;
-        return component(props);
+        const o = component(props);
+        const refs = getRefsArray(o);
+        setTimeout(() => {
+            refs.forEach(({ ref, el }: any) => {
+                if (typeof ref === "function") {
+                    console.log("run", el);
+                    ref(el);
+                }
+            });
+        }, 0);
+        return o;
     };
 
     return (element = render());
