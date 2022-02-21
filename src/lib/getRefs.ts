@@ -1,20 +1,10 @@
-import { flattenDeep } from "./flatDeep-polyfill";
-
 type HTMLElWithRef = HTMLElement & { ref?: string };
 
-export function getRefs(
-    el: HTMLElWithRef | HTMLElWithRef[],
-    refs = {}
-): { [key: string]: HTMLElement } {
-    if (Array.isArray(el)) {
-        el.forEach((_e) => getRefs(_e, refs));
-        return refs;
-    }
-    const refKey = el.getAttribute("ref");
-    if (refKey) refs[refKey] = refs[refKey] ? flattenDeep([refs[refKey], el]) : el;
+const getRefsInternal = (el: Element) =>
+    Array.from(el.children).reduce(
+        (all, elm) => [...getRefsInternal(elm), ...all],
+        (Boolean(el.getAttribute("ref")) ? [el] : []) as Element[]
+    );
 
-    Array.from(el.children).forEach((c) => {
-        getRefs(c as HTMLElWithRef, refs);
-    });
-    return refs;
-}
+export const getRefs = (el): { [key: string]: HTMLElWithRef } =>
+    getRefsInternal(el).reduce((s, e) => ({ ...s, [e.getAttribute("ref")]: e }), {});

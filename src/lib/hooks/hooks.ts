@@ -28,7 +28,7 @@ export function getOrCreateHook(createFunction: (...args: any[]) => any, ...args
     return hookFunction();
 }
 
-export function createBoundComponent(component, props): (Node | string)[] {
+export function createBoundComponent(component: (props: any) => Node, props): Node {
     let element;
     const caller: HookState = {
         props,

@@ -20,8 +20,4 @@ const data = {
     qlc: { active: false, recaptchaRequired: false },
 };
 
-globalThis.loadProps = () => {
-    return data;
-};
-
 hydrate(<Cart {...data} />);
