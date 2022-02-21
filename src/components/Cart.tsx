@@ -6,24 +6,24 @@ import { useState } from "../lib/hooks/useState";
 import { cartTranslations } from "./cart-translations";
 import { createEventChange } from "../lib/utils/events";
 
+const t = useTranslations(cartTranslations);
+
 const opensAt = (openHours) => {
     const date = new Date();
 
-    const normalHours = openHours.normal[date.getDay()];
+    const { opening, closing } = openHours.normal[date.getDay()];
 
-    const opensAt = normalHours.opening.hours;
-    const closesAt = normalHours.closing.hours;
+    const opensAt = opening.hours;
+    const closesAt = closing.hours;
     const currentHour = date.getHours();
     if (opensAt > currentHour) {
-        return t("openingHours.open", { day: "", time: closesAt });
+        return t("openingHours.opensOn", { day: "", time: opensAt });
     }
     if (closesAt <= currentHour) {
         return t("openingHours.opensOn", { day: "imorgon", time: opensAt });
     }
-    return `Öppet, stänger kl. ${closesAt}`;
+    return t("openingHours.open", { time: closesAt });
 };
-
-const t = useTranslations(cartTranslations);
 
 const getTime = (state, deliveryTime, pickupTime) => {
     if (state > 0) {
@@ -31,12 +31,13 @@ const getTime = (state, deliveryTime, pickupTime) => {
             return t("collectInMinutes", { time: Math.round(pickupTime) });
         }
         if (pickupTime < 60 * 8) {
-            const hourDiff = Math.ceil(pickupTime / 60);
-            return t("collectInHours", { time: hourDiff });
+            return t("collectInHours", { time: Math.ceil(pickupTime / 60) });
         }
-        return t("collect.message.noSuffix.days", { time: Math.ceil(pickupTime / (60 * 24)) });
+        if (pickupTime < 60 * 18) {
+            return t("collectInDay");
+        }
     }
-    return t("collect.message.noSuffix.days", { time: deliveryTime });
+    return t("collectInDays", { time: deliveryTime });
 };
 
 const getClosestStore = (articleNumber, { longitude, latitude }) =>
@@ -88,12 +89,14 @@ const Store = ({
     );
 };
 
-const Placeholder = ({ noi, height }) => {
+const Placeholder = ({ noi }) => {
     const elms: Node[] = [];
+
     for (var i = 0; i < noi; i++) {
+        const height = i === 0 ? "182px" : "93px";
         elms.push(
             <div className="placeholder" style={{ height, marginBottom: "0.625rem" }}>
-                Loading
+                {}
             </div>
         );
     }
@@ -137,7 +140,7 @@ const Cart = ({ articleNumber, title, imageUrl, ...dynamic }) => {
 
     const storeElm =
         isLoading || !enabled ? (
-            <Placeholder noi={Math.min(storesNumber, 6) + 1} height="204px" />
+            <Placeholder noi={Math.min(storesNumber, 6) + 1} />
         ) : (
             limit(available, visibleNoi).map(({ id, ...data }, i) => (
                 <Store
