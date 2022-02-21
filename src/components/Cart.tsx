@@ -42,7 +42,7 @@ const getTime = (state, deliveryTime, pickupTime) => {
 const getClosestStore = (articleNumber, { longitude, latitude }) =>
     cachedPromise(`store-${articleNumber}`, () =>
         fetch(
-            `http://localhost:3009/storesWithProduct/${articleNumber}/?lng=${longitude}&lat=${latitude}&distance=200`
+            `https://ecom.knatofs.se/cart-module/storesWithProduct/${articleNumber}/?lng=${longitude}&lat=${latitude}&distance=200`
         ).then((d) => d.json())
     );
 
