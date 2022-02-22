@@ -32,6 +32,8 @@ export function h(
                 el.innerHTML = val.__html || "";
             } else if (key === "style" && typeof attrs.style !== "string") {
                 Object.assign(el.style, attrs.style);
+            } else if (key === "className") {
+                el.removeAttribute("className");
             } else if (val !== false && typeof val !== "function") {
                 el.setAttribute(key, val);
             }
