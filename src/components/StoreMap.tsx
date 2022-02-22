@@ -80,7 +80,6 @@ const StoreMap = ({}) => {
         mapSettings.setVisibility(true);
         zoom.setAlignment(H.ui.LayoutAlignment.TOP_RIGHT);
         scale.setAlignment(H.ui.LayoutAlignment.TOP_RIGHT);
-        console.log(ui, zoom);
     };
 
     return (

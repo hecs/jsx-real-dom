@@ -49,13 +49,17 @@ export function createActiveElement(tagName, renderFunction, watchedProps: strin
             static get observedAttributes() {
                 return watchedProps;
             }
-            attributeChangedCallback(name, old, updated) {
+            render() {
                 this.innerHTML = "";
                 this.append(renderFunction(this.getProperties()) as Node);
             }
+            attributeChangedCallback(name, old, updated) {
+                if (old !== updated) {
+                    this.render();
+                }
+            }
             connectedCallback() {
-                this.innerHTML = "";
-                this.append(renderFunction(this.getProperties()) as Node);
+                this.render();
             }
         }
     );
