@@ -1,6 +1,6 @@
 import { getRefsArray } from "../getRefs";
 
-const contextName = "_context";
+export const contextName = "_context";
 type HookState = {
     element?: Node;
     hooks: ((...args: any[]) => any)[];
@@ -49,11 +49,11 @@ export function createBoundComponent(component: (props: any) => Node, props): No
         setTimeout(() => {
             refs.forEach(({ ref, el }: any) => {
                 if (typeof ref === "function") {
-                    console.log("run", el);
                     ref(el);
                 }
             });
         }, 0);
+        o[contextName] = caller;
         return o;
     };
 

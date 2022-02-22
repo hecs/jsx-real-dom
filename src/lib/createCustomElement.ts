@@ -1,4 +1,5 @@
 import { h } from "./createelement";
+import { contextName } from "./hooks/hooks";
 
 export function createCustomElement(tagName, renderFunction, style?) {
     customElements.define(
@@ -37,6 +38,7 @@ export function createActiveElement(tagName, renderFunction, watchedProps: strin
     customElements.define(
         tagName,
         class BaseComponent extends HTMLElement {
+            _context;
             constructor() {
                 super();
             }
@@ -50,12 +52,17 @@ export function createActiveElement(tagName, renderFunction, watchedProps: strin
                 return watchedProps;
             }
             attributeChangedCallback(name, old, updated) {
-                this.innerHTML = "";
-                this.append(renderFunction(this.getProperties()) as Node);
+                const props = this.getProperties();
+                this._context.render(props);
+                // this.innerHTML = "";
+                // this.append(renderFunction() as Node);
             }
             connectedCallback() {
                 this.innerHTML = "";
-                this.append(renderFunction(this.getProperties()) as Node);
+                const elm = renderFunction(this.getProperties());
+                this._context = elm[contextName];
+                console.log(this._context);
+                this.append(elm as Node);
             }
         }
     );

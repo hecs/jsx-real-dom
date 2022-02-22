@@ -61,7 +61,6 @@ createCustomElement(
 );
 
 hydrate(
-    document.getElementById("app"),
     <div>
         <div>
             <p>Custom elements with bound context</p>
