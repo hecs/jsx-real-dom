@@ -114,7 +114,7 @@ const requestLocationAndFetchStores = (articleNumber) => () =>
         });
     });
 
-const Cart = ({ articleNumber, title, imageUrl, ...dynamic }) => {
+const Cart = ({ articleNumber, cis }) => {
     const [activeTab, setActiveTab] = useState(0);
     const [visibleNoi, setVisibleNoi] = useState(6);
     const [open, setOpen] = useState("");
@@ -127,12 +127,8 @@ const Cart = ({ articleNumber, title, imageUrl, ...dynamic }) => {
         }
     );
 
-    const { availability = {}, sellability = {} } = dynamic || {};
-
-    const cartItem = { articleNumber: articleNumber, imageUrl, title, amount: 1 };
-
-    const cisDisabled = !sellability.buyableCollectAtStore;
-    const storesNumber = availability.availableForCollectAtStoreCount || 0;
+    const storesNumber = cis;
+    const cartItem = { articleNumber, noi: 1 };
 
     const { available, stores } = data || {};
 
@@ -165,11 +161,11 @@ const Cart = ({ articleNumber, title, imageUrl, ...dynamic }) => {
                         <i>{}</i>
                     </button>
                     <button
-                        onClick={() => !cisDisabled && setActiveTab(1)}
-                        className={cisDisabled ? "disabled" : activeTab == 1 && "selected"}
+                        onClick={() => cis > 0 && setActiveTab(1)}
+                        className={activeTab == 1 && "selected"}
                     >
                         <span>{t("storeDeliveryHeadline")}</span>
-                        {!cisDisabled && <i>{t("stores.storesNearYou", { storesNumber })}</i>}
+                        {cis > 0 && <i>{t("stores.storesNearYou", { storesNumber })}</i>}
                     </button>
                 </div>
                 <div>

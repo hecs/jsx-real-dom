@@ -52,8 +52,10 @@ export function createActiveElement(tagName, renderFunction, watchedProps: strin
                 return watchedProps;
             }
             attributeChangedCallback(name, old, updated) {
-                const props = this.getProperties();
-                this._context.render(props);
+                if (old !== updated) {
+                    const props = this.getProperties();
+                    this._context.render(props);
+                }
                 // this.innerHTML = "";
                 // this.append(renderFunction() as Node);
             }
