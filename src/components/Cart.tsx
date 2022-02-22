@@ -103,16 +103,39 @@ const Placeholder = ({ noi }) => {
 
     return <div>{elms}</div>;
 };
+type Location = {
+    latitude: number;
+    longitude: number;
+};
+
+const getLocation = (): Promise<Location> =>
+    new Promise((res, rej) => {
+        const storedLocation = localStorage.getItem("lastLocation");
+        if (storedLocation) {
+            const lastLocation = JSON.parse(storedLocation);
+            if (lastLocation.ts > Date.now() - 60 * 60 * 1000) {
+                res(lastLocation);
+                return;
+            }
+        }
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const { latitude, longitude } = position.coords;
+                const loc = { latitude, longitude, ts: Date.now() };
+                localStorage.setItem("lastLocation", JSON.stringify(loc));
+                res(loc);
+            },
+            rej,
+            { maximumAge: 1000000 }
+        );
+    });
 
 const limit = (arr = [], limit = 10): any[] => arr.slice(0, Math.min(limit, arr.length));
 
 const requestLocationAndFetchStores = (sku) => () =>
-    new Promise((res, _) => {
-        navigator.geolocation.getCurrentPosition((position) => {
-            const { latitude, longitude } = position.coords;
-            getClosestStore(sku, { latitude, longitude }).then(res);
-        });
-    });
+    cachedPromise("stores-" + sku || "none", () =>
+        getLocation().then((pos) => getClosestStore(sku, pos))
+    );
 
 const Cart = ({ sku, cis }) => {
     const [activeTab, setActiveTab] = useState(0);
@@ -126,7 +149,6 @@ const Cart = ({ sku, cis }) => {
             enabled,
         }
     );
-    console.log(isLoading, data, sku);
     const storesNumber = cis;
     const cartItem = { sku, noi: 1 };
 
