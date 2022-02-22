@@ -5,7 +5,7 @@ type HookState = {
     element?: Node;
     hooks: ((...args: any[]) => any)[];
     props: any;
-    render: () => void;
+    render: (props?: any) => void;
     [key: string]: any;
 };
 const replaceElement = (elm: Node, updatedElm: Node) => {
@@ -34,9 +34,9 @@ export function createBoundComponent(component: (props: any) => Node, props): No
     let element;
     const caller: HookState = {
         props,
-        element,
         hooks: [],
-        render: () => {
+        render: (attrs) => {
+            props = attrs || props;
             element = replaceElement(element, render());
         },
     };

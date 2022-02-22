@@ -51,19 +51,17 @@ export function createActiveElement(tagName, renderFunction, watchedProps: strin
             static get observedAttributes() {
                 return watchedProps;
             }
-            attributeChangedCallback(name, old, updated) {
-                if (old !== updated) {
-                    const props = this.getProperties();
-                    this._context.render(props);
+            attributeChangedCallback(_, old, updated) {
+                if (old !== updated && this._context) {
+                    setTimeout(() => {
+                        this._context.render(this.getProperties());
+                    }, 0);
                 }
-                // this.innerHTML = "";
-                // this.append(renderFunction() as Node);
             }
             connectedCallback() {
                 this.innerHTML = "";
                 const elm = renderFunction(this.getProperties());
                 this._context = elm[contextName];
-                console.log(this._context);
                 this.append(elm as Node);
             }
         }

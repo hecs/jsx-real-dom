@@ -161,14 +161,16 @@
 <body>
 	<div id="app"></div>
 	<add-to-cart sku="140910" id="carten" cis="10"></add-to-cart>
-	<button id="change-button">Change article number</button>
+	<button id="change-sku">Change article number</button>
+	<button id="change-cis">Change stores</button>
 	<script src="cart.js"></script>
 	<script>
 		const cart = document.getElementById('carten')
-		document.getElementById('change-button').addEventListener('click', () => {
+		document.getElementById('change-sku').addEventListener('click', () => {
 			cart.setAttribute('sku', Math.ceil(Math.random() * 100000).toString())
+		});
+		document.getElementById('change-cis').addEventListener('click', () => {
 			cart.setAttribute('cis', Math.ceil(Math.random() * 20).toString())
 		});
-
 	</script>
 </body>

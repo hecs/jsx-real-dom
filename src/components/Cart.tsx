@@ -40,10 +40,10 @@ const getTime = (state, deliveryTime, pickupTime) => {
     return t("collectInDays", { time: deliveryTime });
 };
 
-const getClosestStore = (articleNumber, { longitude, latitude }) =>
-    cachedPromise(`store-${articleNumber}`, () =>
+const getClosestStore = (sku, { longitude, latitude }) =>
+    cachedPromise(`store-${sku}`, () =>
         fetch(
-            `https://ecom.knatofs.se/cart-module/storesWithProduct/${articleNumber}/?lng=${longitude}&lat=${latitude}&distance=200`
+            `https://ecom.knatofs.se/cart-module/storesWithProduct/${sku}/?lng=${longitude}&lat=${latitude}&distance=200`
         ).then((d) => d.json())
     );
 
@@ -106,29 +106,29 @@ const Placeholder = ({ noi }) => {
 
 const limit = (arr = [], limit = 10): any[] => arr.slice(0, Math.min(limit, arr.length));
 
-const requestLocationAndFetchStores = (articleNumber) => () =>
+const requestLocationAndFetchStores = (sku) => () =>
     new Promise((res, _) => {
         navigator.geolocation.getCurrentPosition((position) => {
             const { latitude, longitude } = position.coords;
-            getClosestStore(articleNumber, { latitude, longitude }).then(res);
+            getClosestStore(sku, { latitude, longitude }).then(res);
         });
     });
 
-const Cart = ({ articleNumber, cis }) => {
+const Cart = ({ sku, cis }) => {
     const [activeTab, setActiveTab] = useState(0);
     const [visibleNoi, setVisibleNoi] = useState(6);
     const [open, setOpen] = useState("");
-    const enabled = activeTab == 1 && articleNumber;
+    const enabled = activeTab == 1 && sku;
     const { isLoading, data } = useQuery(
-        requestLocationAndFetchStores(articleNumber),
-        ["store", activeTab],
+        requestLocationAndFetchStores(sku),
+        ["store", activeTab, sku],
         {
             enabled,
         }
     );
-
+    console.log(isLoading, data, sku);
     const storesNumber = cis;
-    const cartItem = { articleNumber, noi: 1 };
+    const cartItem = { sku, noi: 1 };
 
     const { available, stores } = data || {};
 
