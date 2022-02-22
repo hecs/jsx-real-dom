@@ -12,7 +12,7 @@ export function useTranslations(input) {
 
         if (!value) return key;
         if (!props) return value;
-        return value.replace(/\{\{(.+)\}\}/gi, (s, prop) => {
+        return value.replace(/\{\{([A-z]+)\}\}/gi, (s, prop) => {
             const r = props[prop.trim()];
             return r !== undefined ? r : s;
         });
