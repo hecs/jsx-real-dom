@@ -1,18 +1,17 @@
 import { createBoundComponent } from "./hooks/hooks";
 
-type Child = Node | string | undefined | boolean;
+export type Child = Node | string | undefined | boolean;
 
 export const Fragment = "Fragment";
 
 const filterOutBooleanAndObjects = (n: any) =>
     n instanceof HTMLElement || !(typeof n === "object" || n == null || typeof n === "boolean");
 
-function getValidChildren(children): (Node | string)[] {
-    return children.flat(Infinity).filter(filterOutBooleanAndObjects);
-}
+const getValidChildren = (children): (Node | string)[] =>
+    children.flat(Infinity).filter(filterOutBooleanAndObjects);
 
 export function h(
-    tagName: string | ((props: any) => Node),
+    tagName: string | ((props: any) => Child),
     attrs: { [key: string]: any },
     ...children: Child[]
 ): Child | Child[] {

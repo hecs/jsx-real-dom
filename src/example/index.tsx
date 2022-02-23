@@ -45,8 +45,15 @@ const html = (
         </p>
         <span style="color: green">Style as string</span>
         <span style={{ color: "red" }}>Style as object</span>
-        <div onMouseMove={console.log}>
+        <div
+            onMouseMove={(ev: MouseEvent) => {
+                refs.mousepos.textContent = JSON.stringify({ x: ev.offsetX, y: ev.offsetY });
+            }}
+            style={{ padding: "20px", border: "1px dashed #ccc", position: "relative" }}
+        >
             This has onMouseMove event <br />
+            Position: <code ref="mousepos"></code>
+            <br />
             Buttons
             {":"}
             <button ref="pizza" disabled textContent="Disabled knapp…" />
@@ -56,15 +63,16 @@ const html = (
         <ce-app>
             <div class="insideslot">Inside slot</div>
         </ce-app>
-
-        <div class="klass">
-            klass
-            <ul>
-                <li>
-                    <span>{someText}</span>
-                </li>
-            </ul>
-        </div>
+        {true}
+        {false}
+        {null}
+        {undefined}
+        {0}
+        {""}
+        {[]}
+        {{}}
+        {'"><script>alert(document.cookie)</script>'}
+        <div class="klass">klass</div>
         <div className="klassname">klassname</div>
         <ul>
             {items.map((i, index) => (
@@ -76,6 +84,7 @@ const html = (
             ))}
         </ul>
         <div>As text: {htmlString}</div>
+        <div innerHTML={htmlString + " < innerHTML"}></div>
         <div dangerouslySetInnerHTML={{ __html: htmlString + " < dangerouslySetInnerHTML" }}></div>
         <label for="korv">Label attribute "for"</label>
         <input
@@ -108,17 +117,25 @@ const html = (
 );
 
 const html2 = (
-    <>
-        <div ref="a">1</div>
-        <div ref="b">2</div>
-        <div ref="c">3</div>
-    </>
+    <Fragment>
+        <div ref="falafel">Refs when root is Fragment with strange values</div>
+        {true}
+        {false}
+        {null}
+        {undefined}
+        {0}
+        {""}
+        {[]}
+        {{}}
+    </Fragment>
 );
 
 const refs = getRefs(html);
+
 const refs2 = getRefs(html2);
-console.log(refs2, html2);
 console.log("refs:", refs);
 console.log("refs2:", refs2);
+
 html.style.color = "DarkOrchid";
-hydrate(html);
+
+document.body.append(html, ...html2);

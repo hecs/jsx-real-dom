@@ -1,3 +1,4 @@
+import { Child } from "../createelement";
 import { getRefsArray, HTMLElWithRef } from "../getRefs";
 
 export const contextName = "_context";
@@ -8,8 +9,11 @@ type HookState = {
     render: (props?: any) => void;
     [key: string]: any;
 };
-const replaceElement = (elm: Node, updatedElm: Node) => {
-    if (elm.parentNode && updatedElm) {
+const replaceElement = (elm: any, updatedElm: Child) => {
+    if (typeof elm === "string") {
+        return updatedElm;
+    }
+    if (elm?.parentNode && updatedElm) {
         elm.parentNode.replaceChild(updatedElm, elm);
         return updatedElm;
     }
@@ -30,7 +34,7 @@ export function getOrCreateHook(createFunction: (...args: any[]) => any, ...args
     return hookFunction();
 }
 
-export function createBoundComponent(component: (props: any) => Node, props): Node {
+export function createBoundComponent(component: (props: any) => Child, props): Child {
     let element;
     const caller: HookState = {
         props,
