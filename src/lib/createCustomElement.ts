@@ -60,6 +60,7 @@ export function createActiveElement(tagName, renderFunction, watchedProps: strin
             }
             connectedCallback() {
                 this.innerHTML = "";
+                console.log("connected element");
                 const elm = renderFunction(this.getProperties());
                 this._context = elm[contextName];
                 this.append(elm as Node);

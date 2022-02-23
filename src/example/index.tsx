@@ -116,7 +116,18 @@ const html = (
     </div>
 );
 
+const html2 = (
+    <>
+        <div ref="a">1</div>
+        <div ref="b">2</div>
+        <div ref="c">3</div>
+    </>
+);
+
 const refs = getRefs(html);
+const refs2 = getRefs(html2);
+console.log(refs2, html2);
 console.log("refs:", refs);
+console.log("refs2:", refs2);
 html.style.color = "DarkOrchid";
 hydrate(html);

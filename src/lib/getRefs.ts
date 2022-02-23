@@ -10,5 +10,8 @@ const getRefsInternal = (el: HTMLElWithRef) => {
 
 export const getRefsArray = (el) => getRefsInternal(el);
 
-export const getRefs = (el): { [key: string]: HTMLElWithRef } =>
-    getRefsInternal(el).reduce((s, e) => ({ ...s, [e.ref]: e.el }), {});
+export const getRefs = (el: HTMLElWithRef | HTMLElWithRef[]): { [key: string]: HTMLElWithRef } =>
+    (Array.isArray(el)
+        ? el.reduce((all, i) => [...all, ...getRefsInternal(i)], [] as HTMLElWithRef[])
+        : getRefsInternal(el)
+    ).reduce((s, e) => ({ ...s, [e.ref]: e.el }), {});
