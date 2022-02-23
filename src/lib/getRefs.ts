@@ -1,11 +1,14 @@
 export type HTMLElWithRef = Element & { ref?: string };
 
 export const getRefsArray = (el: HTMLElWithRef) => {
-    const ref = el.ref || el.getAttribute("ref");
-    return Array.from(el.children).reduce(
-        (all, elm) => [...getRefsArray(elm), ...all],
-        Boolean(ref) ? [{ el, ref }] : []
-    );
+    if (el instanceof HTMLElement) {
+        const ref = (el as any).ref || el.getAttribute("ref");
+        return Array.from(el.children).reduce(
+            (all, elm) => [...getRefsArray(elm), ...all],
+            Boolean(ref) ? [{ el, ref }] : []
+        );
+    }
+    return [];
 };
 
 export const getRefs = (el: HTMLElWithRef | HTMLElWithRef[]): { [key: string]: HTMLElWithRef } =>

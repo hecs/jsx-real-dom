@@ -5,7 +5,7 @@ export type Child = Node | string | undefined | boolean;
 export const Fragment = "Fragment";
 
 const filterOutBooleanAndObjects = (n: any) =>
-    n instanceof HTMLElement || !(typeof n === "object" || n == null || typeof n === "boolean");
+    n instanceof Element || !(typeof n === "object" || n == null || typeof n === "boolean");
 
 const getValidChildren = (children): (Node | string)[] =>
     children.flat(Infinity).filter(filterOutBooleanAndObjects);
@@ -21,9 +21,29 @@ export function h(
     if (tagName === Fragment) {
         return getValidChildren(children);
     }
-    const el = document.createElement(tagName);
+    const [create, setAttr] =
+        tagName === "svg"
+            ? [
+                  () => document.createElementNS(attrs.xmlns, tagName),
+                  (el, prop, value) => {
+                      console.log(el, prop, value);
+                      if (prop !== "xmlns") {
+                          el.setAttributeNS(attrs.xmlns, prop, value);
+                      }
+                  },
+              ]
+            : [
+                  () => {
+                      const elm = document.createElement(tagName);
+                      Object.assign(elm, attrs || {});
+                      return elm;
+                  },
+                  (el, prop, value) => el.setAttribute(prop, value),
+              ];
+
+    const el = create();
+
     if (attrs) {
-        Object.assign(el, attrs);
         for (const [key, val] of Object.entries(attrs)) {
             if (key.startsWith("on")) {
                 el.addEventListener(key.substring(2).toLowerCase(), val, false);
@@ -34,12 +54,14 @@ export function h(
             } else if (key === "className") {
                 el.removeAttribute("className");
             } else if (val !== false && typeof val !== "function") {
-                el.setAttribute(key, val);
+                setAttr(el, key, val); // el.setAttribute(key, val);
             }
         }
     }
 
     el.append(...getValidChildren(children));
-
+    if (tagName === "svg") {
+        el.innerHTML = el.innerHTML;
+    }
     return el;
 }
