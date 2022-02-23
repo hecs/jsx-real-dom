@@ -96,8 +96,16 @@ const html = (
                 <defs>
                     <style>{`.cls-1{fill:#fff;}.cls-2{fill:#06a64f;}.cls-3{fill:none;stroke:#231f20;stroke-linejoin:round;stroke-width:0.82px;}.cls-4{isolation:isolate;}.cls-5{fill:#010101;}.cls-6{fill:#231d1e;}.cls-7{fill:#211f11;}`}</style>
                 </defs>
-                <rect class="cls-1" x="79.3057" y="0.8294" width="21.6438" height="55.92"></rect>
+                <rect
+                    onClick={() => console.log("vit")}
+                    class="cls-1"
+                    x="79.3057"
+                    y="0.8294"
+                    width="21.6438"
+                    height="55.92"
+                ></rect>
                 <polygon
+                    onClick={() => console.log("pelle")}
                     class="cls-2"
                     points="22.971 0.829 79.38 0.829 79.38 56.749 22.971 56.749 0.261 28.789 22.971 0.829"
                 ></polygon>
