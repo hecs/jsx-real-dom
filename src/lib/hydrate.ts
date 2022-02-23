@@ -8,6 +8,6 @@ export function hydrate(content, elm?) {
     elm.innerHTML = "";
 
     elm.append(content);
-    elm.dispatchEvent(createEvent("renderd"));
+    elm.dispatchEvent(createEvent("rendered"));
     return getRefs(elm);
 }

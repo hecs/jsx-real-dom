@@ -1,4 +1,4 @@
-import { getRefsArray } from "../getRefs";
+import { getRefsArray, HTMLElWithRef } from "../getRefs";
 
 export const contextName = "_context";
 type HookState = {
@@ -45,15 +45,17 @@ export function createBoundComponent(component: (props: any) => Node, props): No
     const render = () => {
         caller.i = 0;
         const o = component(props);
-        const refs = getRefsArray(o);
-        setTimeout(() => {
-            refs.forEach(({ ref, el }: any) => {
-                if (typeof ref === "function") {
-                    ref(el);
-                }
-            });
-        }, 0);
-        o[contextName] = caller;
+        if (o !== undefined) {
+            setTimeout(() => {
+                getRefsArray(o as HTMLElWithRef).forEach(({ ref, el }: any) => {
+                    if (typeof ref === "function") {
+                        ref(el);
+                    }
+                });
+            }, 0);
+
+            o[contextName] = caller;
+        }
         return o;
     };
 

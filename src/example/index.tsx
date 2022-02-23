@@ -24,13 +24,6 @@ const items = [
 
 const htmlString = "<b>I'm bold</b>";
 
-const TestComponent = ({ items }: any) => {
-    const elms = items.map((data, idx) => {
-        return <span>{idx} i komponent</span>;
-    });
-    return <div>{elms}</div>;
-};
-
 const t = useTranslations({
     key1: "translated text",
     key2: "other translated text, {{age}} years old",
@@ -63,8 +56,6 @@ const html = (
         <ce-app>
             <div class="insideslot">Inside slot</div>
         </ce-app>
-
-        <TestComponent items={items} />
 
         <div class="klass">
             klass

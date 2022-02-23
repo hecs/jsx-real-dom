@@ -149,7 +149,7 @@ const Cart = ({ sku, cis }) => {
             enabled,
         }
     );
-    console.log(isLoading, data, enabled);
+
     const storesNumber = cis;
     const cartItem = { sku, noi: 1 };
 
