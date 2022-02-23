@@ -10,6 +10,25 @@ const filterOutBooleanAndObjects = (n: any) =>
 const getValidChildren = (children): (Node | string)[] =>
     children.flat(Infinity).filter(filterOutBooleanAndObjects);
 
+const replaceChildren = (el: Element, ns: any) => {
+    const children: any = Array.from(el.children).map((child) => {
+        return replaceChildren(child as Element, ns);
+    });
+    if (el instanceof Element) {
+        const newElm = document.createElementNS(ns, el.tagName.toLowerCase());
+        el.getAttributeNames().forEach((key) => {
+            newElm.setAttributeNS(null, key, el.getAttribute(key)!);
+        });
+
+        newElm.append(...children);
+
+        return newElm;
+    } else {
+        console.log("här är det bajs", el);
+    }
+    return el;
+};
+
 export function h(
     tagName: string | ((props: any) => Child),
     attrs: { [key: string]: any },
@@ -22,13 +41,12 @@ export function h(
         return getValidChildren(children);
     }
     const [create, setAttr] =
-        tagName === "svg"
+        attrs?.xmlns !== undefined
             ? [
                   () => document.createElementNS(attrs.xmlns, tagName),
                   (el, prop, value) => {
-                      console.log(el, prop, value);
                       if (prop !== "xmlns") {
-                          el.setAttributeNS(attrs.xmlns, prop, value);
+                          el.setAttributeNS(null, prop, value);
                       }
                   },
               ]
@@ -36,6 +54,7 @@ export function h(
                   () => {
                       const elm = document.createElement(tagName);
                       Object.assign(elm, attrs || {});
+                      elm.attrs = attrs;
                       return elm;
                   },
                   (el, prop, value) => el.setAttribute(prop, value),
@@ -60,8 +79,8 @@ export function h(
     }
 
     el.append(...getValidChildren(children));
-    if (tagName === "svg") {
-        el.innerHTML = el.innerHTML;
+    if (attrs?.xmlns !== undefined) {
+        return replaceChildren(el, attrs.xmlns);
     }
     return el;
 }
