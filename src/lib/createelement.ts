@@ -12,7 +12,7 @@ const getValidChildren = (children): (Node | string)[] =>
 
 const attrsKey = "_attrs";
 
-const svg = ["svg", "defs", "rect", "polygon", "path", "g", "line", "text", "circle", "a"];
+const svg = ["svg", "defs", "rect", "polygon", "path", "g", "line", "text", "circle"];
 
 export function h(
     tagName: string | ((props: any) => Child),
