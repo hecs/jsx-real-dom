@@ -73,6 +73,7 @@ const html = (
         {{}}
         {'"><script>alert(document.cookie)</script>'}
         <div class="klass">klass</div>
+        <a href="http://feber.se">slaskadasdasdasd</a>
         <div className="klassname">klassname</div>
         <ul>
             {items.map((i, index) => (
@@ -148,7 +149,20 @@ const html = (
                 </g>
             </svg>
         </div>
-        <div>As text: {htmlString}</div>
+        <div>
+            As text: {htmlString}
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <a href="/docs/Web/SVG/Element/circle">
+                    <circle cx="50" cy="40" r="35" />
+                </a>
+
+                <a href="/docs/Web/SVG/Element/text">
+                    <text x="50" y="90" text-anchor="middle">
+                        &lt;circle&gt;
+                    </text>
+                </a>
+            </svg>
+        </div>
         <div innerHTML={htmlString + " < innerHTML"}></div>
         <div dangerouslySetInnerHTML={{ __html: htmlString + " < dangerouslySetInnerHTML" }}></div>
         <label for="korv">Label attribute "for"</label>
