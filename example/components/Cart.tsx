@@ -1,10 +1,10 @@
-import { h, Fragment } from "../lib/createelement";
-import { cachedPromise } from "../lib/utils/promiseCache";
-import { useTranslations } from "../lib/utils/translate";
-import { useQuery } from "../lib/hooks/useQuery";
-import { useState } from "../lib/hooks/useState";
+import { h, Fragment } from "../../src/lib/createelement";
+import { cachedPromise } from "../../src/lib/utils/promiseCache";
+import { useTranslations } from "../../src/lib/utils/translate";
+import { useQuery } from "../../src/lib/hooks/useQuery";
+import { useState } from "../../src/lib/hooks/useState";
 import { cartTranslations } from "./cart-translations";
-import { createEventChange } from "../lib/utils/events";
+import { createEventChange } from "../../src/lib/utils/events";
 
 const t = useTranslations(cartTranslations);
 

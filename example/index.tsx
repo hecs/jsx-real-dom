@@ -1,7 +1,6 @@
-import { h, Fragment } from "../lib/createelement";
-import { getRefs } from "../lib/getRefs";
-import { hydrate } from "../lib/hydrate";
-import { useTranslations } from "../lib/utils/translate";
+import { h, Fragment } from "../src/lib/createelement";
+import { getRefs } from "../src/lib/getRefs";
+import { useTranslations } from "../src/lib/utils/translate";
 
 import "./did-app";
 

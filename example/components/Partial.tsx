@@ -1,4 +1,4 @@
-import { h } from "../lib/createelement";
+import { h } from "../../src/lib/createelement";
 
 const Partial = ({ items }: any) => {
     const elms = items.map((item) => <span>{item}</span>);

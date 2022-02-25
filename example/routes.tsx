@@ -1,6 +1,6 @@
-import { createActiveElement } from "../lib/createCustomElement";
-import { h, Fragment } from "../lib/createelement";
-import { useRouter } from "../lib/hooks/useRouter";
+import { createActiveElement } from "../src/lib/createCustomElement";
+import { h, Fragment } from "../src/lib/createelement";
+import { useRouter } from "../src/lib/hooks/useRouter";
 
 const RouteOne = () => {
     return (

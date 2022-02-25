@@ -1,9 +1,9 @@
-import { createContext, useContext } from "../lib/createContext";
-import { createCustomElement } from "../lib/createCustomElement";
-import { h } from "../lib/createelement";
-import { hydrate } from "../lib/hydrate";
-import { useEffect } from "../lib/hooks/useEffect";
-import { useState } from "../lib/hooks/useState";
+import { createContext, useContext } from "../src/lib/createContext";
+import { createCustomElement } from "../src/lib/createCustomElement";
+import { h } from "../src/lib/createelement";
+import { hydrate } from "../src/lib/hydrate";
+import { useEffect } from "../src/lib/hooks/useEffect";
+import { useState } from "../src/lib/hooks/useState";
 
 const BindingTest = () => {
     const [data, setData] = useState("hej");
