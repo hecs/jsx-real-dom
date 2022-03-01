@@ -2,7 +2,7 @@
     "name": "jsx-real-dom",
     "version": "1.0.0",
     "description": "",
-    "main": "ssr.js",
+    "main": "src/index.ts",
     "type": "module",
     "scripts": {
         "start": "tsc --noEmit && esbuild --tree-shaking=true --bundle --serve --servedir=example --outdir=example example/index.tsx example/binding.tsx example/cart.tsx example/maps.tsx",

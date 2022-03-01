@@ -31,7 +31,7 @@ export function getOrCreateHook(createFunction: (...args: any[]) => any, ...args
     }
     const hookFunction = createFunction(context, ...args);
     context.i = context.hooks.push(hookFunction);
-    return hookFunction();
+    return hookFunction(...args);
 }
 
 export function createBoundComponent(component: (props: any) => Child, props): Child {

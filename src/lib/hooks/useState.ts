@@ -11,8 +11,8 @@ export function useState<T>(initialValue: T): StateResult<T> {
                 ctx.render();
             }
         };
-        return (): StateResult<T> => {
+        return (initialValue): StateResult<T> => {
             return [currentValue, updateFunction, initialValue];
         };
-    });
+    },initialValue);
 }

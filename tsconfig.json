@@ -2,6 +2,7 @@
     "compileOnSave": true,
     "compilerOptions": {
         "allowSyntheticDefaultImports": true,
+        "rootDir": ".",
         "target": "ES2015",
         "outDir": "temp",
         "lib": ["ES2017", "dom"],
