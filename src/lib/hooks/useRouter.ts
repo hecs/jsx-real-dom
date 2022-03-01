@@ -13,15 +13,15 @@ const matchRoute =
 
 export function useRouter(match: string) {
     return getOrCreateHook((ctx) => {
+        console.log("create hook", ctx);
         const matchRoutes = () => {
             const path = window.location.hash.substring(1);
             routes
                 .sort(byLength)
                 .filter(matchRoute(path))
-                .forEach(({ ctx }) => {
-                    console.log(ctx);
+                .forEach(({ render }) => {
                     setTimeout(() => {
-                        ctx.render();
+                        render();
                     }, 0);
                 });
         };
@@ -32,8 +32,13 @@ export function useRouter(match: string) {
                 matchRoutes();
             });
         }
-
-        routes.push({ ctx, match });
+        console.log("new route");
+        if (ctx && ctx.render) {
+            const route = { render: ctx.render, match };
+            if (!routes.includes(route)) {
+                routes.push(route);
+            }
+        }
         const startHash = window.location.hash;
         return (match) => {
             console.log(routes, match, startHash);

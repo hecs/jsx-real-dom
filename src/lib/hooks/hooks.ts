@@ -1,7 +1,6 @@
 import { Child } from "../createelement";
 import { getRefsArray, HTMLElWithRef } from "../getRefs";
 
-export const contextName = "_context";
 type HookState = {
     element?: Node;
     hooks: ((...args: any[]) => any)[];
@@ -9,6 +8,9 @@ type HookState = {
     render: (props?: any) => void;
     [key: string]: any;
 };
+
+export const contextName = "_context";
+
 const replaceElement = (elm: any, updatedElm: Child) => {
     if (typeof elm === "string") {
         return updatedElm;
@@ -22,7 +24,7 @@ const replaceElement = (elm: any, updatedElm: Child) => {
 };
 
 export function getOrCreateHook(createFunction: (...args: any[]) => any, ...args) {
-    const context = getOrCreateHook.caller.caller[contextName] as HookState;
+    const context = currentContext;
     if (context === undefined) {
         throw new Error("Hooks needs a bound context");
     }
@@ -34,28 +36,33 @@ export function getOrCreateHook(createFunction: (...args: any[]) => any, ...args
     return hookFunction();
 }
 
+let currentContext;
+
+const isFunction = (a) => typeof a === "function";
+
 export function createBoundComponent(component: (props: any) => Child, props): Child {
-    let element;
+    let element,
+        d: any[] = [];
     const caller: HookState = {
         props,
         hooks: [],
-        render: (attrs) => {
-            props = attrs || props;
+        render: (attrs = {}) => {
+            props = { ...props, ...(attrs || {}) };
+            d.forEach((e) => e());
             element = replaceElement(element, render());
         },
     };
-    component[contextName] = caller;
 
     const render = () => {
         caller.i = 0;
-        const o = component(props);
-        if (o !== undefined) {
+        currentContext = caller;
+        const o = component(props) as HTMLElWithRef;
+        if (o) {
             setTimeout(() => {
-                getRefsArray(o as HTMLElWithRef).forEach(({ ref, el }: any) => {
-                    if (typeof ref === "function") {
-                        ref(el);
-                    }
-                });
+                d = getRefsArray(o)
+                    .filter(({ ref }) => isFunction(ref))
+                    .map(({ ref, el }) => ref(el))
+                    .filter(isFunction);
             }, 0);
 
             o[contextName] = caller;
