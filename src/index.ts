@@ -4,7 +4,11 @@ import { useContext } from "./lib/createContext";
 import { useQuery } from "./lib/hooks/useQuery";
 import { useEffect } from "./lib/hooks/useEffect";
 import { useState } from "./lib/hooks/useState";
-import { createActiveElement, createCustomElement } from "./lib/createCustomElement";
+import {
+    createActiveElement,
+    createCustomElement,
+    createActiveShadowElement,
+} from "./lib/createCustomElement";
 import { useTranslations } from "./lib/utils/translate";
 export {
     useContext,
@@ -13,6 +17,7 @@ export {
     useEffect,
     createActiveElement,
     createCustomElement,
+    createActiveShadowElement,
     useTranslations,
     Fragment,
     h,
