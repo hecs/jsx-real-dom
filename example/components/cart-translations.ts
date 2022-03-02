@@ -7,6 +7,8 @@ export const cartTranslations = {
     collectInDay: "Hämtas imorgon",
     inStock: "På lager (5+ st)",
     lowStock: "På lager (<5 st)",
+    inWarehouse: "På lager (100+ st)",
+    lowWarehouse: "På lager (<100 st)",
     noStock: "Ej i lager",
     addtocart: "Lägg i kundvagn",
     homeDeliveryHeadline: "Leverans",

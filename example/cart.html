@@ -159,15 +159,20 @@
 </style>
 
 <body>
-	<div id="app"></div>
-	<add-to-cart sku="140910" id="carten" cis="10"></add-to-cart>
+	<cc-slask>ssr data</cc-slask>
+	<div id="app">
+		<add-to-cart sku="103945" id="carten" cis="1"></add-to-cart>
+	</div>
+
 	<button id="change-sku">Change article number</button>
 	<button id="change-cis">Change stores</button>
 	<script src="cart.js"></script>
 	<script>
+		const skus = ['103945', '103950'];
+		let i = 0;
 		const cart = document.getElementById('carten')
 		document.getElementById('change-sku').addEventListener('click', () => {
-			cart.setAttribute('sku', Math.ceil(Math.random() * 100000).toString())
+			cart.setAttribute('sku', skus[(++i) % skus.length])
 		});
 		document.getElementById('change-cis').addEventListener('click', () => {
 			cart.setAttribute('cis', Math.ceil(Math.random() * 20).toString())

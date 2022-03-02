@@ -40,10 +40,15 @@ const getTime = (state, deliveryTime, pickupTime) => {
     return t("collectInDays", { time: deliveryTime });
 };
 
+const getArticleStatus = (sku) =>
+    cachedPromise(`stats-${sku}`, () =>
+        fetch(`https://ecom.knatofs.se/cart-module/statsForProduct/${sku}`).then((d) => d.json())
+    );
+
 const getClosestStore = (sku, { longitude, latitude }) =>
     cachedPromise(`store-${sku}`, () =>
         fetch(
-            `https://ecom.knatofs.se/cart-module/storesWithProduct/${sku}/?lng=${longitude}&lat=${latitude}&distance=200`
+            `https://ecom.knatofs.se/cart-module/storesWithProduct/${sku}/?lng=${longitude}&lat=${latitude}` //&distance=200
         ).then((d) => d.json())
     );
 
@@ -52,6 +57,7 @@ const addToCart = createEventChange("add-to-cart");
 const stockLevels = ["red", "yellow", "green"];
 
 const stockCodes = ["noStock", "lowStock", "inStock"];
+const deliveryStockCodes = ["noStock", "lowWarehouse", "inWarehouse"];
 
 const Store = ({
     displayName,
@@ -125,7 +131,10 @@ const getLocation = (): Promise<Location> =>
                 localStorage.setItem("lastLocation", JSON.stringify(loc));
                 res(loc);
             },
-            rej,
+            () => {
+                res({ longitude: 15.7431222, latitude: 60.5977311 });
+                console.log("unable to fetch location");
+            },
             { maximumAge: 1000000 }
         );
     });
@@ -142,6 +151,13 @@ const Cart = ({ sku, cis }) => {
     const [visibleNoi, setVisibleNoi] = useState(6);
     const [open, setOpen] = useState("");
     const enabled = activeTab == 1 && sku;
+    const { data: stats, isLoading: loadingStats } = useQuery(
+        () => getArticleStatus(sku),
+        ["stats", sku],
+        {
+            enabled: Boolean(sku),
+        }
+    );
     const { isLoading, data } = useQuery(
         requestLocationAndFetchStores(sku),
         ["store", activeTab, sku],
@@ -150,7 +166,7 @@ const Cart = ({ sku, cis }) => {
         }
     );
 
-    const storesNumber = cis;
+    const storesNumber = stats?.storeCount || cis;
     const cartItem = { sku, noi: 1 };
 
     const { available, stores } = data || {};
@@ -181,7 +197,7 @@ const Cart = ({ sku, cis }) => {
                         className={activeTab == 0 && "selected"}
                     >
                         <span>{t("homeDeliveryHeadline")}</span>
-                        <i>{}</i>
+                        <i>{t(deliveryStockCodes[stats?.delivery || 0])}</i>
                     </button>
                     <button
                         onClick={() => cis > 0 && setActiveTab(1)}
