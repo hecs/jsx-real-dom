@@ -1,9 +1,10 @@
 import { Child } from "../createelement";
 import { getRefsArray, HTMLElWithRef } from "../getRefs";
 
+let currentContext;
 export const contextName = "_context";
 type HookState = {
-    element?: Node;
+    element?: any;
     hooks: ((...args: any[]) => any)[];
     props: any;
     render: (props?: any) => void;
@@ -22,7 +23,7 @@ const replaceElement = (elm: any, updatedElm: Child) => {
 };
 
 export function getOrCreateHook(createFunction: (...args: any[]) => any, ...args) {
-    const context = getOrCreateHook.caller.caller[contextName] as HookState;
+    const context = currentContext as HookState;
     if (context === undefined) {
         throw new Error("Hooks needs a bound context");
     }
@@ -38,17 +39,21 @@ export function createBoundComponent(component: (props: any) => Child, props): C
     let element;
     const caller: HookState = {
         props,
+        element,
         hooks: [],
         render: (attrs) => {
-            props = attrs || props;
-            element = replaceElement(element, render());
+            element = replaceElement(element, render(attrs));
         },
     };
     component[contextName] = caller;
 
-    const render = () => {
+    const render = (attrs?) => {
         caller.i = 0;
-        const o = component(props);
+        if (attrs) {
+            caller.props = attrs;
+        }
+        currentContext = caller;
+        const o = component(caller.props);
         if (o !== undefined) {
             setTimeout(() => {
                 getRefsArray(o as HTMLElWithRef).forEach(({ ref, el }: any) => {
@@ -57,7 +62,7 @@ export function createBoundComponent(component: (props: any) => Child, props): C
                     }
                 });
             }, 0);
-
+            caller.element = o;
             o[contextName] = caller;
         }
         return o;

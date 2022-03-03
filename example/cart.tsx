@@ -1,6 +1,9 @@
 import Cart from "./components/Cart";
 import { createActiveElement } from "../src/lib/createCustomElement";
 import { h, Fragment } from "../src/lib/createelement";
+import { getRefs, useState } from "../src";
+import { contextName } from "../src/lib/hooks/hooks";
+import partialRendering from "../src/lib/hooks/partialRendering";
 
 const _ctx = {};
 const named = (id) => (elm) => {
@@ -18,8 +21,21 @@ const bind =
         }
     };
 
-const changeContent = (elm, e) => {
-    elm.innerHTML = Math.ceil(Math.random() * 1000);
+const bindProps = (id, fn, ...args) =>
+    bind(
+        id,
+        (elm, e, ...a) => {
+            const { props, render } = elm[contextName];
+            setTimeout(() => {
+                render(fn(props, e, ...a));
+            }, 0);
+        },
+        ...args
+    );
+
+const changeContent = (props) => {
+    const planet = Math.ceil(Math.random() * 1000);
+    return { ...props, planet };
 };
 
 const TESTNAME = "kalle";
@@ -35,21 +51,36 @@ const items = [
     { planet: "Neptune", size: 24.622 },
 ];
 
+const Kalle = ({ planet, size }) => {
+    partialRendering((rootelement, newProps, oldProps) => {
+        if (newProps?.planet) {
+            rootelement.childNodes[1].innerHTML = newProps.planet;
+            return false;
+        }
+        return true;
+    });
+    const [i, setI] = useState(0);
+    return (
+        <li onClick={() => setI(i + 1)} ref={named(TESTNAME)}>
+            Name: <span>{planet}</span>
+            <br></br>
+            I:{i};<br></br>
+            Size: <span>{size}</span>
+        </li>
+    );
+};
+
 const Slask = () => {
     return (
         <div>
             <ul>
                 {items.map((i, index) => (
-                    <li ref="listItems">
-                        Name: <span>{i.planet}</span>
-                        <br></br>
-                        Size: <span ref={named(TESTNAME)}>{i.size}</span>
-                    </li>
+                    <Kalle {...i} />
                 ))}
             </ul>
-            <span ref={named(TESTNAME)}>Lite text</span>
-            <span ref={named(TESTNAME)}>annat element</span>
-            <button onClick={bind(TESTNAME, changeContent)}>Byt content</button>
+            <span ref={named("a")}>Lite text</span>
+            <span ref={named("b")}>annat element</span>
+            <button onClick={bindProps(TESTNAME, changeContent, "bnajs")}>Byt content</button>
         </div>
     );
 };
