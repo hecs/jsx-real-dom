@@ -52,9 +52,9 @@ const items = [
 ];
 
 const Kalle = ({ planet, size }) => {
-    partialRendering((rootelement, newProps, oldProps) => {
+    partialRendering((elm, newProps) => {
         if (newProps?.planet) {
-            rootelement.childNodes[1].innerHTML = newProps.planet;
+            elm.childNodes[1].innerHTML = newProps.planet;
             return false;
         }
         return true;
