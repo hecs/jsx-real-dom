@@ -3,9 +3,8 @@ import { contextName } from "./hooks/hooks";
 
 const getStyleElement = (style, props = {}) => {
     let styleElm = style;
-
     if (typeof style === "function") {
-        styleElm = h(style, props);
+        styleElm = h("style", { style: style(props) });
     } else if (typeof style === "string") {
         styleElm = document.createElement("style");
         styleElm.innerHTML = style;
@@ -50,14 +49,18 @@ export function createActiveShadowElement(
         tagName,
         class BaseComponent extends HTMLElement {
             _context;
+            _cnt;
             _shadow;
             constructor() {
                 super();
                 const html = this.innerHTML;
+                this._cnt = document.createElement("div");
                 this._shadow = this.attachShadow({ mode: "closed" });
                 this._shadow.innerHTML = html;
-                const styleElm = getStyleElement(style);
+                this._shadow.append(this._cnt);
+                const styleElm = getStyleElement(style, {});
                 if (styleElm !== undefined) {
+                    console.log("appending", this._shadow, styleElm);
                     this._shadow.append(styleElm);
                 }
             }
@@ -78,11 +81,10 @@ export function createActiveShadowElement(
                 }
             }
             connectedCallback() {
-                this._shadow.innerHTML = "";
-                //console.log("connected element");
+                this._cnt.innerHTML = "";
                 const elm = renderFunction(this.getProperties());
                 this._context = elm[contextName];
-                this._shadow.append(elm as Node);
+                this._cnt.append(elm as Node);
             }
         }
     );

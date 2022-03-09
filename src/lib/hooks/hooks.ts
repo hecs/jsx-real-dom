@@ -42,7 +42,10 @@ export function createBoundComponent(component: (props: any) => Child, props): C
         element,
         hooks: [],
         render: (attrs) => {
-            element = replaceElement(element, render(attrs));
+            const [updatedElm, changed] = render(attrs);
+            if (changed) {
+                element = replaceElement(element, updatedElm);
+            }
         },
     };
     component[contextName] = caller;
@@ -52,9 +55,17 @@ export function createBoundComponent(component: (props: any) => Child, props): C
         if (attrs) {
             caller.props = attrs;
         }
-        currentContext = caller;
+        if (element) {
+            currentContext = element[contextName];
+        } else currentContext = caller;
         const o = component(caller.props);
         if (o !== undefined) {
+            if (caller.element && caller.element.innerHTML == (o as HTMLElement).innerHTML) {
+                return [caller.element, false];
+            } else {
+                caller.element = o;
+                o[contextName] = caller;
+            }
             setTimeout(() => {
                 getRefsArray(o as HTMLElWithRef).forEach(({ ref, el }: any) => {
                     if (typeof ref === "function") {
@@ -62,11 +73,9 @@ export function createBoundComponent(component: (props: any) => Child, props): C
                     }
                 });
             }, 0);
-            caller.element = o;
-            o[contextName] = caller;
         }
-        return o;
+        return [o, true];
     };
 
-    return (element = render());
+    return (element = render()[0]);
 }
