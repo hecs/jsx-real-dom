@@ -1,12 +1,9 @@
-import { flattenDeep } from "./flatDeep-polyfill";
-
 type Child = HTMLElement | string | undefined | boolean;
 
-export const Fragment = "Fragment";
-
-const filterOutBooleanAndObjects = (n) =>
+const filterOutBooleanAndObjects = (n: any) =>
     n instanceof HTMLElement || !(typeof n === "object" || n == null || typeof n === "boolean");
 
+export const Fragment = "Fragment";
 export function h(
     tagName: string,
     attrs: { [key: string]: any },
@@ -21,12 +18,8 @@ export function h(
         for (const [key, val] of Object.entries(attrs)) {
             if (key.startsWith("on")) {
                 el.addEventListener(key.substring(2).toLowerCase(), val, false);
-            } else if (key === "dangerouslySetInnerHTML") {
-                el.innerHTML = val.__html || "";
             } else if (key === "style" && typeof attrs.style !== "string") {
-                Object.entries(attrs.style).forEach(([key, val]) => {
-                    el.style[key] = val;
-                });
+                Object.assign(el.style, attrs.style);
             } else {
                 const isBooleanAttributeFalse = val === false;
                 if (!isBooleanAttributeFalse) {
@@ -36,7 +29,7 @@ export function h(
         }
     }
 
-    const toAppend = flattenDeep(children).filter(filterOutBooleanAndObjects);
+    const toAppend = children.flat(Infinity).filter(filterOutBooleanAndObjects);
     el.append(...(toAppend as (string | Node)[]));
 
     return el;

@@ -12,7 +12,6 @@ Features:
 -   Fragment
 -   Refs: use getRefs(fragment) to get an object with refs. Look in /examples for more detailed info.
 -   Attribute and Property support (example: class/className and for/htmlFor works)
--   dangerouslySetInnerHTML (same syntax as react), but innerHTML also works
 
 Do not have:
 

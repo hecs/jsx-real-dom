@@ -68,7 +68,7 @@ const html = (
         </ul>
         <div>As text: {htmlString}</div>
         <div innerHTML={htmlString + " < innerHTML"}></div>
-        <div dangerouslySetInnerHTML={{ __html: htmlString + " < dangerouslySetInnerHTML" }}></div>
+        <div textContent={htmlString + " < textContent"}></div>
         <label for="korv">Label attribute "for"</label>
         <input id="korv" />
         <label htmlFor="korv2">Label property "htmlFor"</label>

@@ -1,5 +1,3 @@
-import { flattenDeep } from "./flatDeep-polyfill";
-
 type HTMLElWithRef = HTMLElement & { ref?: string };
 
 export function getRefs(
@@ -11,7 +9,7 @@ export function getRefs(
         return refs;
     }
     const refKey = el.getAttribute && el.getAttribute("ref");
-    if (refKey) refs[refKey] = refs[refKey] ? flattenDeep([refs[refKey], el]) : el;
+    if (refKey) refs[refKey] = refs[refKey] ? [refs[refKey], el].flat(Infinity) : el;
 
     if (el.children) {
         Array.from(el.children).forEach((c) => {
