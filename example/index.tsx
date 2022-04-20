@@ -90,6 +90,16 @@ const html = (
 
         <button disabled={false}>Boolean attributes (disabled=false)</button>
         <button disabled={true}>Boolean attributes (disabled=true)</button>
+
+        <br />
+        Datalist
+        <input list="pommes" />
+        <datalist id="pommes">
+            <option value="potatis1" />
+            <option value="potatis2" />
+            <option value="potatis3" />
+            <option value="potatis4" />
+        </datalist>
     </div>
 );
 

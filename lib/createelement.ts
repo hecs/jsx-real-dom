@@ -14,7 +14,14 @@ export function h(
     }
     const el = document.createElement(tagName);
     if (attrs) {
-        Object.assign(el, attrs);
+        if (tagName === "input") {
+            // <input>-list property is read-only
+            Object.entries(attrs).forEach(([key, val]) => {
+                if (key !== "list") el[key] = val;
+            });
+        } else {
+            Object.assign(el, attrs);
+        }
         for (const [key, val] of Object.entries(attrs)) {
             if (key.startsWith("on")) {
                 el.addEventListener(key.substring(2).toLowerCase(), val, false);
