@@ -15,10 +15,10 @@ export function h(
     const el = document.createElement(tagName);
     if (attrs) {
         if (tagName === "input") {
-            // <input>-list property is read-only
-            Object.entries(attrs).forEach(([key, val]) => {
-                if (key !== "list") el[key] = val;
-            });
+            // <input>-list property is read-only´
+            for (const key of Object.keys(attrs)) {
+                if (key !== "list") el[key] = attrs[key];
+            }
         } else {
             Object.assign(el, attrs);
         }
