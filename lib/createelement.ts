@@ -5,9 +5,7 @@ export const Fragment = "Fragment",
     _h =
         (isSvg = false) =>
         (tagName: string, attrs: { [key: string]: any }, ...children: Child[]): Child | Child[] => {
-            if (tagName === Fragment) {
-                return children.filter(filterOutBooleanAndObjects);
-            }
+            if (tagName === Fragment) return children.filter(filterOutBooleanAndObjects);
             const el = isSvg ? document.createElementNS("http://www.w3.org/2000/svg", tagName) : document.createElement(tagName);
             if (attrs) {
                 for (const key of Object.keys(attrs)) {
