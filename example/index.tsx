@@ -1,6 +1,7 @@
 import { h, Fragment } from "../lib/createelement";
 import { getRefs } from "../lib/getRefs";
 import "./did-app";
+import { svgFrag } from "./svg";
 
 console.log("hello and welcome");
 
@@ -23,7 +24,7 @@ const htmlString = "<b>I'm bold</b>";
 
 const html = (
     <div ref="kebab">
-        <span>Hello and welcome to the example page.</span>
+        <h1>Hello and welcome to the example page.</h1>
         <p>
             <b>T</b>est
         </p>
@@ -87,10 +88,8 @@ const html = (
                 </Fragment>
             </Fragment>
         </Fragment>
-
         <button disabled={false}>Boolean attributes (disabled=false)</button>
         <button disabled={true}>Boolean attributes (disabled=true)</button>
-
         <br />
         Datalist
         <input list="pommes" />
@@ -125,4 +124,4 @@ console.log("refs2:", refs2);
 
 html.style.color = "DarkOrchid";
 
-document.body.append(html, ...html2);
+document.body.append(html, ...html2, <h2>SVGs</h2>, ...svgFrag());
