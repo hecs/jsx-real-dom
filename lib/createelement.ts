@@ -8,12 +8,12 @@ export const Fragment = "Fragment",
             if (tagName === Fragment) return children.filter(filterOutBooleanAndObjects);
             const el = isSvg ? document.createElementNS("http://www.w3.org/2000/svg", tagName) : document.createElement(tagName);
             if (attrs) {
-                for (const key of Object.keys(attrs)) {
+                for (const [key, val] of Object.entries(attrs)) {
                     const descriptor = Object.getOwnPropertyDescriptor(Object.getPrototypeOf(el), key);
                     const isReadOnly = !!(descriptor?.get && !descriptor.set);
-                    if (!isReadOnly) el[key] = attrs[key];
-                }
-                for (const [key, val] of Object.entries(attrs)) {
+                    if (!isReadOnly) {
+                        el[key] = val;
+                    }
                     if (key.startsWith("on")) {
                         el.addEventListener(key.substring(2).toLowerCase(), val, false);
                     } else if (key === "style" && typeof attrs.style !== "string") {
