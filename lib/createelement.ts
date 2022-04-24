@@ -18,11 +18,8 @@ export const Fragment = "Fragment",
                         el.addEventListener(key.substring(2).toLowerCase(), val, false);
                     } else if (key === "style" && typeof attrs.style !== "string") {
                         Object.assign(el.style, attrs.style);
-                    } else {
-                        const isBooleanAttributeFalse = val === false;
-                        if (!isBooleanAttributeFalse) {
-                            el.setAttribute(key, val);
-                        }
+                    } else if (val !== false && val != null) {
+                        el.setAttribute(key, val);
                     }
                 }
             }

@@ -47,6 +47,8 @@ const html = (
         <ce-app>
             <div class="insideslot">Inside slot</div>
         </ce-app>
+        <hr />
+        <h3>Primitives:</h3>
         {true}
         {false}
         {null}
@@ -55,6 +57,7 @@ const html = (
         {""}
         {[]}
         {{}}
+        <hr />
         {'"><script>alert(document.cookie)</script>'}
         <div class="klass">klass</div>
         <div className="klassname">klassname</div>
@@ -103,17 +106,9 @@ const html = (
 );
 
 const html2 = (
-    <Fragment>
-        <div ref="falafel">Refs when root is Fragment with strange values</div>
-        {true}
-        {false}
-        {null}
-        {undefined}
-        {0}
-        {""}
-        {[]}
-        {{}}
-    </Fragment>
+    <div ref="falafel" undef={undefined} nil={null} zero={0} empty-string={""}>
+        Refs when root is Fragment
+    </div>
 );
 
 const refs = getRefs(html);
@@ -124,4 +119,4 @@ console.log("refs2:", refs2);
 
 html.style.color = "DarkOrchid";
 
-document.body.append(html, ...html2, <h2>SVGs</h2>, ...svgFrag());
+document.body.append(html, html2, <h2>SVGs</h2>, ...svgFrag());
