@@ -1,11 +1,11 @@
-type Child = Element | string | undefined | boolean;
-
-const filterOutBooleanAndObjects = (n: any) => n instanceof Element || !(typeof n === "object" || n == null || typeof n === "boolean");
+type Child = Node | string | undefined | boolean;
+const flatAndFilter = (children: Child[]) =>
+    children.flat(Infinity).filter((n) => n instanceof Node || !(typeof n === "object" || n == null || typeof n === "boolean"));
 export const Fragment = "Fragment",
     _h =
         (isSvg = false) =>
         (tagName: string, attrs: { [key: string]: any }, ...children: Child[]): Child | Child[] => {
-            if (tagName === Fragment) return children.filter(filterOutBooleanAndObjects);
+            if (tagName === Fragment) return flatAndFilter(children);
             const el = isSvg ? document.createElementNS("http://www.w3.org/2000/svg", tagName) : document.createElement(tagName);
             if (attrs) {
                 for (const [key, val] of Object.entries(attrs)) {
@@ -23,7 +23,7 @@ export const Fragment = "Fragment",
                     }
                 }
             }
-            const toAppend = children.flat(Infinity).filter(filterOutBooleanAndObjects);
+            const toAppend = flatAndFilter(children);
             el.append(...(toAppend as (string | Node)[]));
             return el;
         },
