@@ -1,10 +1,11 @@
-type Child = Node | string | undefined | boolean;
-const flatAndFilter = (children: Child[]) =>
-    children.flat(Infinity).filter((n) => n instanceof Node || !(typeof n === "object" || n == null || typeof n === "boolean"));
+const flatAndFilter = (children: any[]) =>
+    children
+        .flat(Infinity)
+        .filter((i) => i instanceof Node || typeof i === "string" || typeof i === "number" || i instanceof String || i instanceof Number);
 export const Fragment = "Fragment",
     _h =
         (isSvg = false) =>
-        (tagName: string, attrs: { [key: string]: any }, ...children: Child[]): Child | Child[] => {
+        (tagName: string, attrs: { [key: string]: any }, ...children: any[]) => {
             if (tagName === Fragment) return flatAndFilter(children);
             const el = isSvg ? document.createElementNS("http://www.w3.org/2000/svg", tagName) : document.createElement(tagName);
             if (attrs) {
@@ -23,8 +24,7 @@ export const Fragment = "Fragment",
                     }
                 }
             }
-            const toAppend = flatAndFilter(children);
-            el.append(...(toAppend as (string | Node)[]));
+            el.append(...(flatAndFilter(children) as (Node | string)[]));
             return el;
         },
     h = _h();

@@ -54,9 +54,14 @@ const html = (
         {null}
         {undefined}
         {0}
+        {Number(1)}
+        {new Number(2)}
         {""}
         {[]}
         {{}}
+        {String("Hello")}
+        {"_"}
+        {new String("world")}
         <hr />
         {'"><script>alert(document.cookie)</script>'}
         <div class="klass">klass</div>
