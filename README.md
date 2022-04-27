@@ -8,11 +8,12 @@ Created because I got tired of the virtual DOM and needed something really simpl
 
 Features:
 
+-   Less than 0.5kb
 -   Event binding
 -   Fragment
 -   Refs: use getRefs(fragment) to get an object with refs. Look in /examples for more detailed info.
 -   Attribute and Property support (example: class/className and for/htmlFor works)
--   SVG support for most cases. Always sets namespace 'http://www.w3.org/2000/svg'. JSX containing SVG needs to be in a separate files and that file needs to import a separate h-function. 
+-   SVG support for most cases. Always sets namespace 'http://www.w3.org/2000/svg'. JSX containing SVG needs to be in a separate files and that file needs to import a separate h-function.
 
 Do not have:
 
