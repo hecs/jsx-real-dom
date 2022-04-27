@@ -6,7 +6,7 @@
     "scripts": {
         "start": "tsc --noEmit && esbuild --bundle --serve --servedir=example --outdir=example example/index.tsx",
         "temp-build": "esbuild --bundle --outdir=temp example/index.tsx",
-        "size": "esbuild $(ls lib/*.ts) --bundle --minify --format=esm --outdir=dist && tsc --noEmit && node build/size.js"
+        "size": "esbuild $(ls lib/*.ts) --bundle --minify --outdir=dist && tsc --noEmit && node build/size.js"
     },
     "author": "",
     "license": "ISC",
