@@ -3,8 +3,6 @@ import { getRefs } from "../lib/getRefs";
 import "./did-app";
 import { svgFrag } from "./svg";
 
-console.log("hello and welcome");
-
 function clickHandler(e) {
     console.log("click", e);
 }
