@@ -6,6 +6,8 @@ JSX runtime. No virtual DOM.
 
 Created because I got tired of the virtual DOM and needed something really simple that created real DOM nodes and had some essential features. Now we're just continuing to work on this for fun.
 
+Use together with Custom elements is recommended.
+
 Features:
 
 -   Less than 0.5kb (minified and compressed)
