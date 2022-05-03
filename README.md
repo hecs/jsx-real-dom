@@ -8,7 +8,7 @@ Created because I got tired of the virtual DOM and needed something really simpl
 
 Features:
 
--   Less than 0.5kb
+-   Less than 0.5kb (minified and compressed)
 -   Event binding
 -   Fragment
 -   Refs: use getRefs(fragment) to get an object with refs. Look in /examples for more detailed info.
