@@ -1,9 +1,10 @@
-import { Fragment } from "../lib/createelement";
-import { h } from "../lib/createsvgelement";
+import { Fragment } from "../src/lib/createelement";
+import { h } from "../src/lib/createsvgelement";
 
 export const svgFrag = () => (
     <Fragment>
-        {/*"js"*/}<svg
+        {/*"js"*/}
+        <svg
             width="256px"
             height="256px"
             viewBox="0 0 256 256"
@@ -24,7 +25,8 @@ export const svgFrag = () => (
                 ></path>
             </g>
         </svg>
-        {/*"esbuild"*/}<svg
+        {/*"esbuild"*/}
+        <svg
             width="256px"
             height="256px"
             viewBox="0 0 256 256"

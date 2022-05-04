@@ -1,5 +1,5 @@
-import { h, Fragment } from "../lib/createelement";
-import { getRefs } from "../lib/getRefs";
+import { h, Fragment } from "../src/lib/createelement";
+import { getRefs } from "../src/lib/getRefs";
 import "./did-app";
 import { svgFrag } from "./svg";
 
