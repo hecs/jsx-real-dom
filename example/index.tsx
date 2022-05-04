@@ -80,20 +80,20 @@ const html = (
         <input id="korv" />
         <label htmlFor="korv2">Label property "htmlFor"</label>
         <input id="korv2" />
-        <Fragment>
+        <>
             <div>Inside fragment</div>
-        </Fragment>
-        <Fragment>
-            <Fragment>
-                <Fragment>
+        </>
+        <>
+            <>
+                <>
                     <div>
-                        <Fragment>
-                            <Fragment>Inside multiple fragment</Fragment>
-                        </Fragment>
+                        <>
+                            <>Inside multiple fragment</>
+                        </>
                     </div>
-                </Fragment>
-            </Fragment>
-        </Fragment>
+                </>
+            </>
+        </>
         <button disabled={false}>Boolean attributes (disabled=false)</button>
         <button disabled={true}>Boolean attributes (disabled=true)</button>
         <br />
