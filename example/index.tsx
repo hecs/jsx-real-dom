@@ -120,6 +120,4 @@ const refs2 = getRefs(html2);
 console.log("refs:", refs);
 console.log("refs2:", refs2);
 
-html.style.color = "DarkOrchid";
-
 document.body.append(html, html2, <h2>SVGs</h2>, ...svgFrag());
