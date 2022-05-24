@@ -1,82 +1,98 @@
-import { createContext, useContext } from "../src/lib/createContext";
+import { useQuery } from "../src";
 import { createCustomElement } from "../src/lib/createCustomElement";
-import { h } from "../src/lib/createelement";
-import { hydrate } from "../src/lib/hydrate";
-import { useEffect } from "../src/lib/hooks/useEffect";
+import { h, Fragment } from "../src/lib/createelement";
 import { useState } from "../src/lib/hooks/useState";
+import { hydrate } from "../src/lib/hydrate";
 
-const BindingTest = () => {
-    const [data, setData] = useState("hej");
-    const [idx, setIdx] = useState(0);
+const fetchData = () =>
+    fetch("https://swapi.dev/api/films/", {
+        headers: { "Content-Type": "application/json" },
+    }).then((d) => d.json());
 
-    const updateValue = (e) => {
-        setData(e.target.value);
-        setIdx(idx + 1);
-    };
-    useEffect(() => {
-        console.log("first load only");
-    }, []);
+const App = () => {
+    const [count, setCount] = useState(0);
+    const { isLoading, data } = useQuery(fetchData, ["static"], { enabled: true });
+    console.log(isLoading, data);
     return (
         <div>
-            <input value={data} onChange={updateValue} /> data in input {data} {idx}
+            <p>
+                <button
+                    type="button"
+                    onClick={() => {
+                        console.log("update", count + 1);
+                        setCount(count + 1);
+                    }}
+                >
+                    count is: {count}
+                </button>
+            </p>
+            <p>
+                {isLoading && <div>Loading...</div>}
+                {!isLoading &&
+                    data.results.map(({ title }) => {
+                        return (
+                            <div>
+                                <span>{title}</span>
+                            </div>
+                        );
+                    })}
+            </p>
+            <p>
+                <a
+                    class="link"
+                    href="https://preactjs.com/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    Learn luffar-act
+                </a>
+            </p>
         </div>
     );
 };
-
-const customContext = createContext({ contextProperty: "fanta" });
-
-const ContextConsumerTest = () => {
-    const {
-        data: { contextProperty },
-    } = useContext(customContext);
-    return <span>Context data: {contextProperty}</span>;
-};
-
-const ContextUpdaterTest = ({ text }) => {
-    const { set } = useContext(customContext);
-    return <button onClick={() => set({ contextProperty: Math.random() * 1000 })}>{text}</button>;
-};
-
-const CustomBoundElement = ({ text }) => {
-    const { data } = useContext(customContext);
-    return (
-        <div>
-            custom element generator with prop {text}, from context {JSON.stringify(data)}
-        </div>
-    );
-};
-
-createCustomElement(
-    "slask-elm",
-    CustomBoundElement,
-    <style>
-        {`
-    * {
-            background-color:blue;
-            padding:1rem;
-            color:#fff;
-    }
-			`}
-    </style>
-);
 
 hydrate(
-    <div>
-        <div>
-            <p>Custom elements with bound context</p>
-            <slask-elm text="text from property" />
-        </div>
-        <div>
-            <p>Regular context consumer</p>
-            <ContextConsumerTest />
-        </div>
-        <div>
-            <p>State hooks</p>
-            <BindingTest />
-        </div>
-        <div>
-            <p>Context updater</p>
-            <ContextUpdaterTest text="change context value" />
-        </div>
+    <div id="app">
+        <img src="logo.svg" className="App-logo" width="200" height="200" alt="logo" />
+        <p>Hello esbuild + Luffar act!</p>
+        <App />
     </div>
 );
+
+// createCustomElement(
+//     "slask-elm",
+//     () => (
+//         <div id="app">
+//             <img src="logo.svg" className="App-logo" alt="logo" />
+//             <p>Hello esbuild + Luffar act!</p>
+//             <App />
+//         </div>
+//     ),
+//     <style>
+//         {`
+
+//     * {
+//       box-sizing: border-box;
+//     }
+
+//     #app {
+//       height: 100%;
+//       text-align: center;
+//       background-color: #673ab8;
+//       color: #fff;
+//       font-size: 1.5em;
+//       padding-top: 100px;
+//     }
+
+// .App-logo {
+//     width: 40vmin;
+//     pointer-events: none;
+//   }
+
+//     .link {
+//       color: #fff;
+//     }
+
+// 			`}
+//     </style>
+// );

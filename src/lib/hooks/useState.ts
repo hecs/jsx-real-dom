@@ -8,11 +8,12 @@ export function useState<T>(initialValue: T): StateResult<T> {
         const updateFunction = (update: T) => {
             if (currentValue !== update) {
                 currentValue = update;
+                console.log("render");
                 ctx.render();
             }
         };
         return (initialValue): StateResult<T> => {
             return [currentValue, updateFunction, initialValue];
         };
-    },initialValue);
+    }, initialValue);
 }

@@ -17,11 +17,26 @@ export function useQuery(
     options: QueryOptions
 ): QueryResultType {
     return getOrCreateHook(
-        (ctx) => {
+        (ctx, onFocus) => {
             let lastValues,
                 data,
                 isLoading = false,
                 error;
+            window.addEventListener("focus", () => {
+                if (!isLoading) {
+                    onFocus()
+                        .then((d) => {
+                            if (JSON.stringify(d) != JSON.stringify(data)) {
+                                data = d;
+                                ctx.render();
+                            }
+                        })
+                        .catch((err) => {
+                            console.error(err);
+                            error = err;
+                        });
+                }
+            });
             return (promise, values, { enabled = true } = {}) => {
                 if (!compareArray(values, lastValues) && !isLoading && enabled) {
                     isLoading = true;

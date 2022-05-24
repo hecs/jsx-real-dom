@@ -1,5 +1,5 @@
 import { h, Fragment } from "../../src/lib/createelement";
-import { cachedPromise } from "../../src/lib/utils/promiseCache";
+// import { cachedPromise } from "../../src/lib/utils/promiseCache";
 import { useTranslations } from "../../src/lib/utils/translate";
 import { useQuery } from "../../src/lib/hooks/useQuery";
 import { useState } from "../../src/lib/hooks/useState";
@@ -41,16 +41,12 @@ const getTime = (state, deliveryTime, pickupTime) => {
 };
 
 const getArticleStatus = (sku) =>
-    cachedPromise(`stats-${sku}`, () =>
-        fetch(`https://ecom.knatofs.se/cart-module/statsForProduct/${sku}`).then((d) => d.json())
-    );
+    fetch(`https://ecom.knatofs.se/cart-module/statsForProduct/${sku}`).then((d) => d.json());
 
 const getClosestStore = (sku, { longitude, latitude }) =>
-    cachedPromise(`store-${sku}`, () =>
-        fetch(
-            `https://ecom.knatofs.se/cart-module/storesWithProduct/${sku}/?lng=${longitude}&lat=${latitude}` //&distance=200
-        ).then((d) => d.json())
-    );
+    fetch(
+        `https://ecom.knatofs.se/cart-module/storesWithProduct/${sku}/?lng=${longitude}&lat=${latitude}` //&distance=200
+    ).then((d) => d.json());
 
 const addToCart = createEventChange("add-to-cart");
 
@@ -142,9 +138,7 @@ const getLocation = (): Promise<Location> =>
 const limit = (arr = [], limit = 10): any[] => arr.slice(0, Math.min(limit, arr.length));
 
 const requestLocationAndFetchStores = (sku) => () =>
-    cachedPromise("stores-" + sku || "none", () =>
-        getLocation().then((pos) => getClosestStore(sku, pos))
-    );
+    getLocation().then((pos) => getClosestStore(sku, pos));
 
 const Cart = ({ sku, cis }) => {
     const [activeTab, setActiveTab] = useState(0);

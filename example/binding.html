@@ -1,35 +1,50 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 
 <head>
+	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>luffar act</title>
 	<style>
-		div {
-			margin-top: 3rem;
+		html,
+		body {
+			height: 100%;
+			width: 100%;
+			padding: 0;
+			margin: 0;
+			background: #fafafa;
+			font-family: 'Helvetica Neue', arial, sans-serif;
+			font-weight: 400;
+			color: #444;
+			-webkit-font-smoothing: antialiased;
+			-moz-osx-font-smoothing: grayscale;
 		}
 
-		p {}
+		* {
+			box-sizing: border-box;
+		}
+
+		#app {
+			height: 100%;
+			text-align: center;
+			background-color: #673ab8;
+			color: #fff;
+			font-size: 1.5em;
+			padding-top: 100px;
+		}
+
+		.App-logo {
+			pointer-events: none;
+		}
+
+		.link {
+			color: #fff;
+		}
 	</style>
 </head>
 
 <body>
-	<div id="app">
-		<div>
-			<div>
-				<p>Custom elements with bound context</p>
-				<slask-elm text="text from property"></slask-elm>
-			</div>
-			<div>
-				<p>Regular context consumer</p><span>Context data: fanta</span>
-			</div>
-			<div>
-				<p>State hooks</p>
-				<div><input value="hej"> data in input hej 0</div>
-			</div>
-			<div>
-				<p>Context updater</p><button>change context value</button>
-			</div>
-		</div>
-	</div>
+	<!-- <slask-elm text="text from property"></slask-elm> -->
 	<script src="binding.js"></script>
 </body>
 
