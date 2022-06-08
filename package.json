@@ -6,7 +6,7 @@
     "type": "module",
     "scripts": {
         "start": "tsc --noEmit && esbuild --minify --tree-shaking=true --bundle --serve --servedir=example --outdir=example example/index.tsx example/binding.tsx example/cart.tsx example/maps.tsx",
-        "temp-build": "esbuild --bundle --outdir=temp index.tsx",
+        "temp-build": "esbuild --bundle --outdir=temp src/index.ts",
         "ssr": "nodemon ssr.js"
     },
     "author": "",
