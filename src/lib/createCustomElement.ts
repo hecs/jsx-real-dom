@@ -28,12 +28,13 @@ export function createCustomElement(tagName, renderFunction, style?) {
             }
             connectedCallback() {
                 const props = this.getProperties();
+                const fallback = this.innerHTML;
                 let styleElm = getStyleElement(style);
-
+                this.innerHTML = '';
                 if (styleElm !== undefined) {
                     this.#shadowRoot.append(styleElm);
                 }
-                this.#shadowRoot.append(h(renderFunction, props) as Node);
+                this.#shadowRoot.append(h(renderFunction, { ...props, fallback }) as Node);
             }
         }
     );
@@ -51,12 +52,14 @@ export function createActiveShadowElement(
             _context;
             _cnt;
             _shadow;
+            fallback;
             constructor() {
                 super();
                 const html = this.innerHTML;
                 this._cnt = document.createElement("div");
                 this._shadow = this.attachShadow({ mode: "closed" });
-                this._shadow.innerHTML = html;
+                this.fallback = html;
+                //this._shadow.innerHTML = html;
                 this._shadow.append(this._cnt);
                 const styleElm = getStyleElement(style, {});
                 if (styleElm !== undefined) {
@@ -81,7 +84,7 @@ export function createActiveShadowElement(
             }
             connectedCallback() {
                 this._cnt.innerHTML = "";
-                const elm = renderFunction(this.getProperties());
+                const elm = renderFunction({ ...this.getProperties(), fallback: this.fallback });
                 this._context = elm[contextName];
                 this._cnt.append(elm as Node);
             }
