@@ -26,20 +26,20 @@ export function h(
         for (const [key, val] of Object.entries(attrs)) {
             if (key.startsWith("on")) {
                 el.addEventListener(key.substring(2).toLowerCase(), val, false);
-                delete attrs[key];
             } else if (key === "dangerouslySetInnerHTML") {
                 el.innerHTML = val.__html || "";
             } else if (key === "style" && typeof attrs.style !== "string") {
                 Object.assign(el.style, attrs.style);
-            } else if (key === "className") {
-                el.removeAttribute("className");
+            } else if (key === "data") {
+                Object.assign(el.dataset, val);
             } else if (val !== false && typeof val !== "function") {
                 el.setAttribute(key, val);
-            } else {
-                console.log("dont set", key, val);
+            } else if (key === "ref") {
+                val(el);
+                delete attrs[key];
             }
         }
-        Object.assign(el, attrs);
+        //Object.assign(el, attrs);
     }
 
     el.append(...getValidChildren(children));
