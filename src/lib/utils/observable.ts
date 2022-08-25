@@ -1,10 +1,12 @@
+export type Transform<I, O> = (data: I) => I | O | Promise<O>;
+
 export class Observable<I, O> {
-    _next: Observable<unknown, unknown>[] = [];
+    _next: Observable<O, unknown>[] = [];
     input: any;
     output: any;
-    transformer: (I) => O | Promise<O>;
-    constructor(data?: I, transformFunction: (I) => O | Promise<O> = (_) => _) {
-        this.transformer = transformFunction;
+    transformer: Transform<I, O>;
+    constructor(data?: I | undefined, transformFunction: Transform<I, O> = (d) => d) {
+        this.transformer = transformFunction.bind(this);
         if (data !== undefined) {
             this.emit(data);
         }
@@ -35,14 +37,14 @@ export class Observable<I, O> {
             this.handleOutput(result);
         }
     }
-    next<R extends Observable<O, unknown>>(n: R) {
+    next<R extends Observable<O, any>>(n: R) {
         this._next.push(n);
         if (this.output !== undefined) {
             n.emit(this.output);
         }
         return n;
     }
-    pipe<R extends Observable<O, unknown>>(...next: R[]): R {
+    pipe<R extends Observable<O, any>>(...next: R[]): R {
         let t: any = this;
         next.forEach((n) => {
             t = t.next(n);
@@ -67,7 +69,7 @@ export const tap = <I>(fn: (data: I) => void) =>
         return data;
     });
 
-export const map = <I, O>(fn: (data: I) => O | Promise<O>) => new Observable<I, O>(undefined, fn);
+export const map = <I, O>(fn: Transform<I, O>) => new Observable<I, O>(undefined, fn);
 
 export const timer = <I extends any>(value: I, time: number = 300) => {
     const o = new Observable<I, I>();
@@ -77,8 +79,8 @@ export const timer = <I extends any>(value: I, time: number = 300) => {
     return o;
 };
 
-export const delay = <I>(time: number = 200) =>
-    new Observable<I, I>(
+export const delay = (time: number = 200) =>
+    new Observable<any, any>(
         undefined,
         (d) =>
             new Promise((res) => {
@@ -88,22 +90,25 @@ export const delay = <I>(time: number = 200) =>
             })
     );
 
-export const forkJoin = <I extends unknown, O extends { [key: string]: any }>(parts: {
-    [key: string]: Observable<unknown, unknown>;
-}): Observable<unknown, O> => {
-    return new Observable<boolean, O>(true, function (_: I) {
+type ForkInput = {
+    [key: string]: Observable<any, any>;
+};
+
+export const forkJoin = <T extends ForkInput, O extends { [key in keyof T]: any }>(parts: T) => {
+    return new Observable<boolean, O>(true, function (_) {
         const t = this;
 
         return new Promise<O>((_) => {
             const checkComplete = () => {
                 if (!Object.values(o).some((d) => d === undefined)) {
-                    t.handleOutput({ ...o } as O, false);
+                    t.handleOutput({ ...o }, false);
                 }
             };
 
-            const o = Object.entries(parts).reduce((sum, [key, value]) => {
+            const o = Object.entries(parts).reduce((sum, [key]) => {
                 return { ...sum, [key]: undefined };
             }, {});
+
             Object.entries(parts).forEach(([key, value]) => {
                 value.subscribe((v) => {
                     o[key] = v;
@@ -122,13 +127,17 @@ export const fromEvent = <
         | AnimationEvent
         | MouseEvent
         | InputEvent
-        | FocusEvent,
-    E extends HTMLElement
+        | FocusEvent
+        | any,
+    E extends HTMLElement | Window,
+    O
 >(
     elm: E,
-    evt: keyof HTMLElementEventMap = "click"
+    evt: keyof HTMLElementEventMap | keyof WindowEventMap = "click",
+    initialValue?: T,
+    transform?: Transform<T, O>
 ) => {
-    const obs = new Observable<T, T>();
+    const obs = new Observable<T, O>(initialValue, transform);
     elm.addEventListener(evt, (e: Event) => {
         obs.emit(e as T);
     });
