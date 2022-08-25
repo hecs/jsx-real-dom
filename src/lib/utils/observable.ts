@@ -1,12 +1,12 @@
 export class Observable<I, O> {
-    _next: Observable<O, unknown>[] = [];
+    _next: Observable<unknown, unknown>[] = [];
     input: any;
     output: any;
     transformer: (I) => O | Promise<O>;
     constructor(transformFunction: (I) => O | Promise<O> = (_) => _) {
         this.transformer = transformFunction;
     }
-    emit(data: any) {
+    emit(data: I) {
         if (this.input !== data) {
             this.input = data;
             this.#onChange();
@@ -32,22 +32,23 @@ export class Observable<I, O> {
             this.handleOutput(result);
         }
     }
-    addNext(n: Observable<O, unknown>) {
+    addNext<R extends Observable<O, unknown>>(n: R) {
         this._next.push(n);
         if (this.output !== undefined) {
             n.emit(this.output);
         }
     }
-    pipe(...next: Observable<unknown, unknown>[]) {
-        let t: Observable<unknown, unknown> = this;
+    pipe<R extends Observable<O, unknown>>(...next: R[]): R {
+        let t: any = this;
         next.forEach((n) => {
             t.addNext(n);
             t = n;
         });
         return t;
     }
-    subscribe(fn: (data: O) => void) {
+    subscribe(fn: (data: O) => unknown) {
         this.addNext(tap(fn));
+        return this;
     }
 }
 
@@ -60,3 +61,32 @@ export const tap = <I>(fn: (data: I) => void) =>
     });
 
 export const map = <I, O>(fn: (data: I) => O) => new Observable<I, O>(fn);
+
+export const fromEvent = <
+    T extends
+        | Event
+        | ClipboardEvent
+        | UIEvent
+        | AnimationEvent
+        | MouseEvent
+        | InputEvent
+        | FocusEvent,
+    E extends HTMLElement
+>(
+    elm: E,
+    evt: keyof HTMLElementEventMap = "click"
+) => {
+    const obs = new Observable<T, T>();
+    elm.addEventListener(evt, (e: Event) => {
+        obs.emit(e as T);
+    });
+    return obs;
+};
+
+export const lnk =
+    <T extends Event>(obs: Observable<T, T>) =>
+    (e: T) => {
+        obs.emit(e);
+        e.stopPropagation();
+        e.preventDefault();
+    };
