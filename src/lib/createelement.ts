@@ -25,6 +25,7 @@ export function h(
     if (attrs) {
         for (const [key, val] of Object.entries(attrs)) {
             if (key.startsWith("on")) {
+                val.bind(el);
                 el.addEventListener(key.substring(2).toLowerCase(), val, false);
             } else if (key === "dangerouslySetInnerHTML") {
                 el.innerHTML = val.__html || "";

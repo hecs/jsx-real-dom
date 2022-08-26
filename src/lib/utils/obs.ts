@@ -44,3 +44,11 @@ export const debounce = (fn: (...args) => unknown, time = 200) => {
         }, time);
     };
 };
+
+export function preventDefault<T extends Event>(fn: (e: T) => unknown) {
+    return function (e: T) {
+        fn.apply(this, [e]);
+        e.stopPropagation();
+        e.preventDefault();
+    };
+}

@@ -17,10 +17,10 @@ const toDomDict = (nodes: Node[], keyExtractor: (Node) => string | undefined): N
 type Child = { [key: string]: any; key: string };
 
 export const conditionalMerge = (
-    render: (Child) => HTMLElement,
+    render: (child: Child) => HTMLElement,
     children: Child[],
     parentNode: HTMLElement,
-    keyExtractor: (Node) => string | undefined
+    keyExtractor: (node: HTMLElement) => string | undefined
 ) => {
     const existing = toDomDict(
         Array.from(parentNode.childNodes).filter((d) => d.nodeType === 1),
@@ -29,7 +29,7 @@ export const conditionalMerge = (
 
     let matched: string[] = [];
     children.forEach((node, idx) => {
-        const key = node.key || keyExtractor(node);
+        const { key } = node;
         if (key) {
             const found = existing[key];
             if (found) {
@@ -58,33 +58,8 @@ export const mergeChildren = (
         const key = keyExtractor(child);
         return key ? { ...all, [key]: child } : all;
     }, {});
-    const nodes = Object.entries(nodeData).map(([key, value]) => {
+    const nodes = Object.keys(nodeData).map((key) => {
         return { key };
     });
     return conditionalMerge(({ key }) => nodeData[key], nodes, parentNode, keyExtractor);
-    // const existing = toDomDict(
-    //     Array.from(parentNode.childNodes).filter((d) => d.nodeType === 1),
-    //     keyExtractor
-    // );
-
-    // let matched: string[] = [];
-    // children.forEach((node, idx) => {
-    //     const key = keyExtractor(node);
-    //     if (key) {
-    //         const found = existing[key];
-    //         if (found) {
-    //             matched.push(key);
-    //             if (found.idx !== idx) {
-    //                 parentNode.append(found.node);
-    //             }
-    //         } else {
-    //             parentNode.appendChild(node);
-    //         }
-    //     }
-    // });
-    // Object.keys(existing)
-    //     .filter((key) => !matched.includes(key))
-    //     .forEach((keyToRemove) => {
-    //         parentNode.removeChild(existing[keyToRemove].node);
-    //     });
 };
