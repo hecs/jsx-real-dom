@@ -10,6 +10,7 @@ import {
     createActiveShadowElement,
 } from "./lib/createCustomElement";
 import { useTranslations } from "./lib/utils/translate";
+import { mergeChildren } from "./lib/utils/mergeChildren";
 export {
     useContext,
     useQuery,
@@ -22,5 +23,6 @@ export {
     Fragment,
     h,
     getRefs,
+    mergeChildren,
     getRefsArray,
 };

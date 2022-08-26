@@ -5,7 +5,10 @@
         "rootDir": ".",
         "target": "ES2015",
         "outDir": "temp",
-        "lib": ["ES2017", "dom"],
+        "lib": [
+            "ES2019",
+            "dom"
+        ],
         "sourceMap": true,
         "jsx": "react",
         "jsxFactory": "h",
