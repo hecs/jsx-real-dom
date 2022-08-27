@@ -8,7 +8,6 @@ export const makeObservable = <T extends object>(data: T): [T, RegisterObserver<
     };
     const result = new Proxy(data, {
         set(target, property, value) {
-            console.log("setting", target, property, value);
             if (target[property] !== value) {
                 target[property] = value;
                 onChange({ property, value });

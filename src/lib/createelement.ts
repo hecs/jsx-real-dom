@@ -29,20 +29,18 @@ export function h(
             if (key.startsWith("on")) {
                 val.bind(el);
                 el.addEventListener(key.substring(2).toLowerCase(), val, false);
-            } else if (key === "dangerouslySetInnerHTML") {
-                el.innerHTML = val.__html || "";
+            } else if (key === "html" && val) {
+                el.innerHTML = val;
             } else if (key === "style" && typeof attrs.style !== "string") {
                 Object.assign(el.style, attrs.style);
             } else if (key === "data") {
                 Object.assign(el.dataset, val);
-            } else if (val !== false && typeof val !== "function") {
-                el.setAttribute(key, val);
             } else if (key === "ref") {
-                setTimeout(val(el),0);
-                delete attrs[key];
-            }
+                val(el);
+            } else if (val !== false) {
+                el.setAttribute(key, val);
+            } 
         }
-        //Object.assign(el, attrs);
     }
 
     el.append(...getValidChildren(children));

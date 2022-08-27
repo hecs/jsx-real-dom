@@ -18,14 +18,13 @@ const replaceElement = (elm: any, updatedElm: Child) => {
         elm.parentNode.replaceChild(updatedElm, elm);
         return updatedElm;
     }
-    console.warn("could not update", elm, updatedElm);
     return elm;
 };
 
 export function getOrCreateHook(createFunction: (...args: any[]) => any, ...args) {
     const context = currentContext as HookState;
-    if (context === undefined) {
-        throw new Error("Hooks needs a bound context");
+    if (!context) {
+        throw new Error("no context");
     }
     if (context.i < (context.hooks || []).length) {
         return context.hooks[context.i++](...args);
