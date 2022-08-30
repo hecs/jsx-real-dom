@@ -72,7 +72,7 @@ const html = (
         {{}}
         {'"><script>alert(document.cookie)</script>'}
         <div class="klass">klass</div>
-        <div className="klassname">klassname</div>
+        <div class="klassname">klassname</div>
         <ul>
             {items.map((i, index) => (
                 <li ref="listItems">

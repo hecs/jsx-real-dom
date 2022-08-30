@@ -5,7 +5,7 @@ const getStores = () => fetch("https://ecom.knatofs.se/cart-module/stores").then
 
 const Store = ({ displayName, id }) => {
     return (
-        <div id={`store${id}`} className="store">
+        <div id={`store${id}`} class="store">
             {displayName}
         </div>
     );
@@ -82,7 +82,7 @@ const StoreMap = ({}) => {
 
     return (
         <div ref={renderMap} style={{ position: "absolute", width: "800px", height: "600px" }}>
-            <div className="storecnt">
+            <div class="storecnt">
                 <div ref={(elm) => (storesParent = elm)}></div>
             </div>
         </div>

@@ -72,13 +72,13 @@ const Store = ({
     cartItem,
 }: any = {}) => {
     return (
-        <div className="store" onClick={onClick}>
+        <div class="store" onClick={onClick}>
             <div>
                 <strong>{displayName}</strong>&nbsp;∙&nbsp;
                 <span>{Math.round(distance)} km</span>
             </div>
             <div>
-                <span className={"stock " + stockLevels[state]}>{t(stockCodes[state])}</span>,&nbsp;
+                <span class={"stock " + stockLevels[state]}>{t(stockCodes[state])}</span>,&nbsp;
                 <span>{getTime(state, deliveryTime, pickupTime)}</span>
             </div>
             <div>{opensAt(openHours)}</div>
@@ -86,7 +86,7 @@ const Store = ({
                 <div>
                     <span class="address">{address}</span>
 
-                    <button className="addtocart" onClick={addToCart(cartItem)}>
+                    <button class="addtocart" onClick={addToCart(cartItem)}>
                         {t("addtocart")}
                     </button>
                 </div>
@@ -101,7 +101,7 @@ const Placeholder = ({ noi }) => {
     for (var i = 0; i < noi; i++) {
         const height = i === 0 ? "182px" : "93px";
         elms.push(
-            <div className="placeholder" style={{ height, marginBottom: "0.625rem" }}>
+            <div class="placeholder" style={{ height, marginBottom: "0.625rem" }}>
                 {}
             </div>
         );
@@ -190,18 +190,18 @@ const Cart = ({ sku, cis }) => {
 
     return (
         <div>
-            <div className="tabs">
-                <div className="btns">
+            <div class="tabs">
+                <div class="btns">
                     <button
                         onClick={() => setActiveTab(0)}
-                        className={activeTab == 0 && "selected"}
+                        class={activeTab == 0 && "selected"}
                     >
                         <span>{t("homeDeliveryHeadline")}</span>
                         <i>{t(deliveryStockCodes[stats?.delivery || 0])}</i>
                     </button>
                     <button
                         onClick={() => cis > 0 && setActiveTab(1)}
-                        className={activeTab == 1 && "selected"}
+                        class={activeTab == 1 && "selected"}
                     >
                         <span>{t("storeDeliveryHeadline")}</span>
                         {cis > 0 && <i>{t("stores.storesNearYou", { storesNumber })}</i>}
@@ -209,15 +209,15 @@ const Cart = ({ sku, cis }) => {
                 </div>
                 <div>
                     {activeTab == 0 && (
-                        <div className="tab pn">
+                        <div class="tab pn">
                             <p>{t("availability.seeAllInCheckout")}</p>
-                            <button onClick={addToCart(cartItem)} className="addtocart">
+                            <button onClick={addToCart(cartItem)} class="addtocart">
                                 {t("addtocart")}
                             </button>
                         </div>
                     )}
                     {activeTab == 1 && (
-                        <div className="tab pn">
+                        <div class="tab pn">
                             {storeElm}
                             {visibleNoi < available?.length && (
                                 <span onClick={() => setVisibleNoi(visibleNoi + 10)}>Mer</span>
