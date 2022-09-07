@@ -7,9 +7,9 @@ const toDomDict = (nodes: Node[], keyExtractor: (Node) => string | undefined): N
         const key = keyExtractor(node);
         return key
             ? {
-                  ...acc,
-                  [key]: { node, idx },
-              }
+                ...acc,
+                [key]: { node, idx },
+            }
             : acc;
     }, {});
 };
@@ -23,10 +23,9 @@ export const conditionalMerge = (
     keyExtractor: (node: HTMLElement) => string | undefined
 ) => {
     const existing = toDomDict(
-        Array.from(parentNode.childNodes).filter((d) => d.nodeType === 1),
+        Array.from(parentNode.childNodes || []).filter((d) => d.nodeType === 1),
         keyExtractor
     );
-
     let matched: string[] = [];
     children.forEach((node, idx) => {
         const { key } = node;
@@ -45,7 +44,7 @@ export const conditionalMerge = (
     Object.keys(existing)
         .filter((key) => !matched.includes(key))
         .forEach((keyToRemove) => {
-            parentNode.removeChild(existing[keyToRemove].node);
+            parentNode.removeChild(existing[keyToRemove]?.node);
         });
 };
 
