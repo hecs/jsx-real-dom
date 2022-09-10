@@ -26,11 +26,19 @@ export const makeObservable = <T extends object>(data: T): [T, RegisterObserver<
 };
 export const link =
     <T>(obs: RegisterObserver<T>, fn: (data: T, ...a) => void) =>
-    (...arg) => {
-        obs((data) => {
-            fn(data, ...arg);
-        });
-    };
+        (...arg) => {
+            obs((data) => {
+                fn(data, ...arg);
+            });
+        };
+
+export const eventFactory = <E extends Event, R>(name: string, fn: (e: E) => R) => {
+    return function (this: HTMLElement, e: E) {
+        const detail = fn.apply(this, [e]);
+        const event = new CustomEvent(name, { detail, bubbles: true })
+        this.dispatchEvent(event);
+    }
+}
 
 export const debounce = (fn: (...args) => unknown, time = 200) => {
     let timer;
@@ -45,7 +53,7 @@ export const debounce = (fn: (...args) => unknown, time = 200) => {
 };
 
 export function preventDefault<T extends Event>(fn: (e: T) => unknown) {
-    return function (e: T) {
+    return function (this: any, e: T) {
         fn.apply(this, [e]);
         e.stopPropagation();
         e.preventDefault();

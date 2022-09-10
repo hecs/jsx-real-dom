@@ -16,9 +16,9 @@ const toDomDict = (nodes: Node[], keyExtractor: (Node) => string | undefined): N
 
 type Child = { [key: string]: any; key: string };
 
-export const conditionalMerge = (
-    render: (child: Child) => HTMLElement,
-    children: Child[],
+export const conditionalMerge = <T extends Child>(
+    render: (child: T) => HTMLElement,
+    children: T[],
     parentNode: HTMLElement,
     keyExtractor: (node: HTMLElement) => string | undefined
 ) => {
