@@ -52,10 +52,15 @@ export const debounce = (fn: (...args) => unknown, time = 200) => {
     };
 };
 
+export function cancel<T extends Event>(e: T):T {
+    e.stopPropagation();
+    e.preventDefault();
+    return e;
+}
+
 export function preventDefault<T extends Event>(fn: (e: T) => unknown) {
     return function (this: any, e: T) {
-        fn.apply(this, [e]);
-        e.stopPropagation();
-        e.preventDefault();
+        fn.apply(this, [cancel(e)]);
+
     };
 }
