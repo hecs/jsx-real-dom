@@ -40,19 +40,19 @@ export const eventFactory = <E extends Event, R>(name: string, fn: (e: E) => R) 
     }
 }
 
-export const debounce = (fn: (...args) => unknown, time = 200) => {
+export const debounce = <T extends Array<unknown>>(fn: (...args: T) => unknown, time = 200) => {
     let timer;
-    return (...args) => {
+    return (...args: T) => {
         if (timer) {
             clearTimeout(timer);
         }
         timer = setTimeout(() => {
-            fn(args);
+            fn(...args as T);
         }, time);
     };
 };
 
-export function cancel<T extends Event>(e: T):T {
+export function cancel<T extends Event>(e: T): T {
     e.stopPropagation();
     e.preventDefault();
     return e;
