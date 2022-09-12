@@ -8,7 +8,8 @@ type HookState = {
     hooks: ((...args: any[]) => any)[];
     props: any;
     render: (props?: any) => void;
-    [key: string]: any;
+    i: number,
+    //[key: string]: any;
 };
 const replaceElement = (elm: any, updatedElm: Child) => {
     if (typeof elm === "string") {
@@ -37,6 +38,7 @@ export function getOrCreateHook(createFunction: (...args: any[]) => any, ...args
 export function createBoundComponent(component: (props: any) => Child, props): Child {
     let element;
     const caller: HookState = {
+        i: 0,
         props,
         element,
         hooks: [],
@@ -65,13 +67,13 @@ export function createBoundComponent(component: (props: any) => Child, props): C
                 caller.element = o;
                 o[contextName] = caller;
             }
-            setTimeout(() => {
-                getRefsArray(o as HTMLElWithRef).forEach(({ ref, el }: any) => {
-                    if (typeof ref === "function") {
-                        ref(el);
-                    }
-                });
-            }, 0);
+            // setTimeout(() => {
+            //     getRefsArray(o as HTMLElWithRef).forEach(({ ref, el }: any) => {
+            //         if (typeof ref === "function") {
+            //             ref(el);
+            //         }
+            //     });
+            // }, 0);
         }
         return [o, true];
     };
