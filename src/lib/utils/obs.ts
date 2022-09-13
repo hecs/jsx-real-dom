@@ -1,10 +1,12 @@
+import { safeRun } from "./helpers";
+
 export type Observer<T> = (data: T, details?: { property: string; value: any }) => void;
 export type RegisterObserver<T> = (cb: Observer<T>) => void;
 
 export const makeObservable = <T extends object>(data: T): [T, RegisterObserver<T>] => {
     const listeners: Observer<T>[] = [];
     const onChange = (data) => {
-        listeners.forEach((fn) => fn(result, data));
+        listeners.forEach((fn) => fn(data));
     };
     const result = new Proxy(data, {
         set(target, property, value) {
@@ -17,19 +19,19 @@ export const makeObservable = <T extends object>(data: T): [T, RegisterObserver<
         },
     });
     const subscribe = (fn: Observer<T>) => {
-        listeners.push(fn);
+        const safeFn = safeRun(fn);
+        listeners.push(safeFn);
+
         if (result !== undefined) {
-            fn(result);
+            safeFn(result);
         }
     };
     return [result, subscribe];
 };
 export const link =
-    <T>(obs: RegisterObserver<T>, fn: (data: T, ...a) => void) =>
-        (...arg) => {
-            obs((data) => {
-                fn(data, ...arg);
-            });
+    <T, A extends Array<unknown>>(obs: RegisterObserver<T>, fn: (data: T, ...a: A) => void) =>
+        (...arg: A) => {
+            obs((data) => fn(data, ...arg));
         };
 
 export const eventFactory = <E extends Event, R>(name: string, fn: (e: E) => R) => {
