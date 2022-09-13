@@ -6,7 +6,9 @@ export type RegisterObserver<T> = (cb: Observer<T>) => void;
 export const makeObservable = <T extends object>(data: T): [T, RegisterObserver<T>] => {
     const listeners: Observer<T>[] = [];
     const onChange = (data) => {
-        listeners.forEach((fn) => fn(data));
+        listeners.forEach((fn) => {
+            fn(result, data)
+        });
     };
     const result = new Proxy(data, {
         set(target, property, value) {
@@ -63,6 +65,5 @@ export function cancel<T extends Event>(e: T): T {
 export function preventDefault<T extends Event>(fn: (e: T) => unknown) {
     return function (this: any, e: T) {
         fn.apply(this, [cancel(e)]);
-
     };
 }

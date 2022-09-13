@@ -1,3 +1,5 @@
+import { safeRun } from "./helpers";
+
 export type PubSubType = {
     pub: <T>(data: T) => void;
     sub: (fn: <T>(data: T) => void) => () => void;
@@ -6,16 +8,15 @@ export type PubSubType = {
 export const pubsub = (listeners: (<T>(data: T) => void)[] = []): PubSubType => {
     return {
         pub: <T>(data: T) => {
-            listeners.forEach((fn) => {
-                fn(data);
-            });
+            listeners.forEach((fn) => fn(data));
         },
         sub: (fn: <T>(data: T) => void) => {
-            if (listeners.indexOf(fn) === -1) {
-                listeners.push(fn);
-            }
+            const safeFn = safeRun(fn);
+
+            listeners.push(safeFn);
+
             return () => {
-                listeners = listeners.filter((e) => e !== fn);
+                listeners = listeners.filter((e) => e !== safeFn);
             };
         },
     };
