@@ -8,7 +8,8 @@ type HookState = {
     hooks: ((...args: any[]) => any)[];
     props: any;
     render: (props?: any) => void;
-    [key: string]: any;
+    i: number,
+    //[key: string]: any;
 };
 const replaceElement = (elm: any, updatedElm: Child) => {
     if (typeof elm === "string") {
@@ -37,6 +38,7 @@ export function getOrCreateHook(createFunction: (...args: any[]) => any, ...args
 export function createBoundComponent(component: (props: any) => Child, props): Child {
     let element;
     const caller: HookState = {
+        i: 0,
         props,
         element,
         hooks: [],
