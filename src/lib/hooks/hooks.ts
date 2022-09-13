@@ -1,5 +1,5 @@
 import { Child } from "../createelement";
-import { getRefsArray, HTMLElWithRef } from "../getRefs";
+// import { getRefsArray, HTMLElWithRef } from "../getRefs";
 
 let currentContext;
 export const contextName = "_context";
@@ -65,13 +65,13 @@ export function createBoundComponent(component: (props: any) => Child, props): C
                 caller.element = o;
                 o[contextName] = caller;
             }
-            setTimeout(() => {
-                getRefsArray(o as HTMLElWithRef).forEach(({ ref, el }: any) => {
-                    if (typeof ref === "function") {
-                        ref(el);
-                    }
-                });
-            }, 0);
+            // setTimeout(() => {
+            //     getRefsArray(o as HTMLElWithRef).forEach(({ ref, el }: any) => {
+            //         if (typeof ref === "function") {
+            //             ref(el);
+            //         }
+            //     });
+            // }, 0);
         }
         return [o, true];
     };
