@@ -19,7 +19,7 @@ export const Fragment = "Fragment",
                         continue;
                     if (key === "style" && typeof attrs.style !== "string") {
                         Object.assign(el.style, attrs.style);
-                    } else if (key.startsWith("on")) {
+                    } else if (key.startsWith("on") && key[2] === key[2].toUpperCase()) {
                         el.addEventListener(key.substring(2).toLowerCase(), val, false);
                     } else if (val !== false) {
                         el.setAttribute(key, val);
