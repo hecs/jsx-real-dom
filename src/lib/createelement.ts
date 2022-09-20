@@ -15,11 +15,13 @@ export const Fragment = "Fragment",
                     if (!isReadOnly) {
                         el[key] = val;
                     }
+                    if (val == null) {
+                        continue;
                     if (key === "style" && typeof attrs.style !== "string") {
                         Object.assign(el.style, attrs.style);
                     } else if (key.startsWith("on")) {
                         el.addEventListener(key.substring(2).toLowerCase(), val, false);
-                    } else if (val !== false && val != null) {
+                    } else if (val !== false) {
                         el.setAttribute(key, val);
                     }
                 }
