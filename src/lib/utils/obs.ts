@@ -1,13 +1,16 @@
-import { safeRun } from "./helpers";
-
 export type Observer<T> = (data: T, details?: { property: string; value: any }) => void;
 export type RegisterObserver<T> = (cb: Observer<T>) => void;
 
 export const makeObservable = <T extends object>(data: T): [T, RegisterObserver<T>] => {
-    const listeners: Observer<T>[] = [];
+    const listeners = new Set<Observer<T>>();
     const onChange = (data) => {
         listeners.forEach((fn) => {
-            fn(result, data)
+            try {
+                fn(result, data)
+            }
+            catch(err) {
+                console.warn(err);
+            }
         });
     };
     const result = new Proxy(data, {
@@ -21,11 +24,9 @@ export const makeObservable = <T extends object>(data: T): [T, RegisterObserver<
         },
     });
     const subscribe = (fn: Observer<T>) => {
-        const safeFn = safeRun(fn);
-        listeners.push(safeFn);
-
+        listeners.add(fn);
         if (result !== undefined) {
-            safeFn(result);
+            fn(result);
         }
     };
     return [result, subscribe];

@@ -1,22 +1,25 @@
-import { safeRun } from "./helpers";
-
-export type PubSubType = {
-    pub: <T>(data: T) => void;
-    sub: (fn: <T>(data: T) => void) => () => void;
+export type PubSubType<T> = {
+    pub: (data: T) => void;
+    sub: (fn: (data: T) => unknown) => () => void;
 };
 
-export const pubsub = (listeners: (<T>(data: T) => void)[] = []): PubSubType => {
+export const pubsub = <T>(): PubSubType<T> => {
+    const listeners = new Set<(data: T) => unknown>();
     return {
-        pub: <T>(data: T) => {
-            listeners.forEach((fn) => fn(data));
+        pub: (data: T) => {
+            listeners.forEach((fn) => {
+                try {
+                    fn(data)
+                }
+                catch (err) {
+                    console.warn(err);
+                }
+            });
         },
-        sub: (fn: <T>(data: T) => void) => {
-            const safeFn = safeRun(fn);
-
-            listeners.push(safeFn);
-
+        sub: (fn) => {
+            listeners.add(fn);
             return () => {
-                listeners = listeners.filter((e) => e !== safeFn);
+                listeners.delete(fn);
             };
         },
     };
