@@ -1,49 +1,64 @@
-export type Observer<T> = (data: T, details?: { property: string; value: any }) => void;
-export type RegisterObserver<T> = (cb: Observer<T>) => void;
+import { pubsub, Subscribe } from './pubsub';
+
+export type ObserverDetails<T extends object> = undefined | { property: string | symbol | keyof T; value: unknown };
+
+export type RegisterObserver<T extends object> = Subscribe<[T, ObserverDetails<T>]>;
 
 export const makeObservable = <T extends object>(data: T): [T, RegisterObserver<T>] => {
-    const listeners = new Set<Observer<T>>();
-    const onChange = (data) => {
-        listeners.forEach((fn) => {
-            try {
-                fn(result, data)
-            }
-            catch(err) {
-                console.warn(err);
-            }
-        });
-    };
+    const [pub, sub] = pubsub<[T, ObserverDetails<T>]>();
+
     const result = new Proxy(data, {
         set(target, property, value) {
             if (target[property] !== value) {
                 target[property] = value;
-                onChange({ property, value });
+                pub(result, { property, value });
                 return true;
             }
             return false;
-        },
-    });
-    const subscribe = (fn: Observer<T>) => {
-        listeners.add(fn);
-        if (result !== undefined) {
-            fn(result);
         }
+    });
+    const addListener: RegisterObserver<T> = (fn) => {
+        fn(result, undefined);
+        return sub(fn);
     };
-    return [result, subscribe];
+
+    return [result, addListener];
 };
-export const link =
-    <T, A extends Array<unknown>>(obs: RegisterObserver<T>, fn: (data: T, ...a: A) => void) =>
-        (...arg: A) => {
-            obs((data) => fn(data, ...arg));
-        };
+
+export const fromEvent = <T extends Event>(): [(Event)=>void,RegisterObserver<T>] =>{
+    var [value, sub] = makeObservable<T>({} as T);
+    return [(evt)=>{
+        Object.assign(value,evt);
+    },sub];
+}
+
+export const link = <T extends object, A extends Array<unknown>>(
+    obs: RegisterObserver<T>,
+    fn: (data: T, ...a: A) => void,
+    filter?: (condition: T, details: ObserverDetails<T>) => boolean
+) => (...arg: A) => {
+    return obs((data, details) => {
+        if (!filter || !details || filter(data, details)) {
+            fn(data, ...arg);
+        }
+    });
+};
+
+export const multi = <T extends Array<unknown>>(...fns: Array<(...args: T) => unknown>) => {
+    return (...args: T) => {
+        fns.forEach((fn) => {
+            fn(...args);
+        });
+    };
+};
 
 export const eventFactory = <E extends Event, R>(name: string, fn: (e: E) => R) => {
     return function (this: HTMLElement, e: E) {
         const detail = fn.apply(this, [e]);
-        const event = new CustomEvent(name, { detail, bubbles: true })
+        const event = new CustomEvent(name, { detail, bubbles: true });
         this.dispatchEvent(event);
-    }
-}
+    };
+};
 
 export const debounce = <T extends Array<unknown>>(fn: (...args: T) => unknown, time = 200) => {
     let timer;
@@ -52,7 +67,7 @@ export const debounce = <T extends Array<unknown>>(fn: (...args: T) => unknown, 
             clearTimeout(timer);
         }
         timer = setTimeout(() => {
-            fn(...args as T);
+            fn(...(args as T));
         }, time);
     };
 };
