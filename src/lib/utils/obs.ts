@@ -14,7 +14,7 @@ export const makeObservable = <T extends object>(data: T): [T, RegisterObserver<
                 pub(result, { property, value });
                 return true;
             }
-            return false;
+            return true;
         }
     });
     const addListener: RegisterObserver<T> = (fn) => {
