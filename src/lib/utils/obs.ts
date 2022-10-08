@@ -52,6 +52,42 @@ export const multi = <T extends Array<unknown>>(...fns: Array<(...args: T) => un
     };
 };
 
+export const linkToHash = <T extends object>(state:[T, RegisterObserver<T>], excludeKeys:string[]=[]): [T, RegisterObserver<T>] => {
+    const [data, onChange] = state;
+    
+    const validKeys = ([key]:[string,unknown])=>!excludeKeys.includes(key);
+
+    const generateHash = (from:T) => {
+        return Object.entries(from).filter(validKeys).reduce((all,[key,value])=>{
+            return [...all, `${key}=${btoa(JSON.stringify(value))}`];
+        },[] as string[]).join('&');
+    } 
+
+    const updateStateFromHash = () => {
+        const hashState = location.hash.substring(1).split('&').map(d=>d.split('=')).reduce((s,[key,value])=>{
+            return { ...s, [key]: JSON.parse(atob(value))};
+        },{});
+        
+        Object.entries(hashState).filter(validKeys).forEach(([key,value])=>{
+            const stateValue = data[key];
+            if (JSON.stringify(value) != JSON.stringify(stateValue)) {
+                data[key] = value;
+            }
+        })
+    }
+    if (location.hash.length > 1) {
+        updateStateFromHash();
+    }
+    addEventListener('hashchange',()=>{
+        updateStateFromHash()
+    })
+    
+    onChange((data, details) => {
+        location.hash = generateHash(data);
+    })
+    return state;
+}
+
 export const eventFactory = <E extends Event, R>(name: string, fn: (e: E) => R) => {
     return function (this: HTMLElement, e: E) {
         const detail = fn.apply(this, [e]);
