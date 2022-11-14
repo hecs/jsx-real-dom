@@ -12,6 +12,10 @@ const getValidChildren = (children): (Node | string)[] =>
 
 type PropsWithChildren = { [key:string]:any, children?: Child[] };
 
+const createElement = (tagName)=>{
+    return document.createElement(tagName)
+}
+
 export function h(
     tagName: string | ((props: PropsWithChildren) => Child),
     attrs: { [key: string]: any },
@@ -23,7 +27,9 @@ export function h(
     if (tagName === Fragment) {
         return getValidChildren(children);
     }
-    const el = document.createElement(tagName);
+    
+    const el = createElement(tagName);
+    
     if (attrs) {
         for (const [key, val] of Object.entries(attrs)) {
             if (key.startsWith("on")) {
